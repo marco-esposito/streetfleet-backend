@@ -1,0 +1,28 @@
+{
+  "name": "streetfleet-backend",
+  "version": "1.0.0",
+  "description": "Server for streetfleet",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikwib/streetfleet-backend.git"
+  },
+  "author": "Evan hendrix & Marco Esposito",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikwib/streetfleet-backend/issues"
+  },
+  "homepage": "https://github.com/nikwib/streetfleet-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "koa": "^2.5.0",
+    "koa-body-parser": "^1.1.2",
+    "koa-bodyparser": "^4.2.0",
+    "koa-logger": "^3.2.0",
+    "koa-router": "^7.4.0"
+  }
+}
