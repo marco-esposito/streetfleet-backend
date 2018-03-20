@@ -8,23 +8,34 @@ const router = new Router({
     prefix: '/api/v1'
 });
 
-router
-  .get('/testroute', test.testAdd)
+const authorize = async (ctx, next) => {
+  console.log('Kimba!');
+  if (!ctx.company) {
+    ctx.status = 401;
+    ctx.body = 'Unauthorized';
+    return;
+  }
+  await next();
+};
 
-  // .get('/fleet', car.getFleet)
-  // .put('/fleet/car/:license_number', car.addOrUpdate)
-  // .get('/fleet/car/:license_number', car.get)
-  // .delete('/fleet/car/:license_number', car.delete)
+router
+  // .get('/testroute', test.testAdd)
+  // .get('/testauthorize', authorize, test.test)
+
+  // .get('/fleet', authorize, car.getFleet)
+  // .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
+  // .get('/fleet/car/:license_number', authorize, car.get)
+  // .delete('/fleet/car/:license_number', authorize, car.delete)
   // //NOTE: car.getTripLogs will have to be faked for MVP
-  // .get('/fleet/car/trips/:license_number', car.getTripLogs)
+  // .get('/fleet/car/trips/:license_number', authorize, car.getTripLogs)
   // .post('/fleet/car/location', car.postLocation
   //
-  // .post('/company/sign-up', company.signUp)
-  // .get('/company/sign-in', company.signIn)
+  .post('/company/sign-up', company.signUp)
+  .get('/company/sign-in', company.signIn)
 
 
   .get('/*', ctx => {
-    ctx.body = `<h1>Sorry the page does not exist</h1>`
+    ctx.body = `The route doesn't exist`
     ctx.status = 404
   });
 
