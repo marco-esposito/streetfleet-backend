@@ -21,12 +21,12 @@ const authorize = async (ctx, next) => {
 router
   .get('/testroute', test.testAdd)
 
-  // .get('/fleet', car.getFleet)
-  // .put('/fleet/car/:license_number', car.addOrUpdate)
-  // .get('/fleet/car/:license_number', car.get)
-  // .delete('/fleet/car/:license_number', car.delete)
+  // .get('/fleet', authorize, car.getFleet)
+  // .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
+  // .get('/fleet/car/:license_number', authorize, car.get)
+  // .delete('/fleet/car/:license_number', authorize, car.delete)
   // //NOTE: car.getTripLogs will have to be faked for MVP
-  // .get('/fleet/car/trips/:license_number', car.getTripLogs)
+  // .get('/fleet/car/trips/:license_number', authorize, car.getTripLogs)
   // .post('/fleet/car/location', car.postLocation
   //
   .post('/company/sign-up', company.signUp)
