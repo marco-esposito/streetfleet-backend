@@ -18,7 +18,7 @@ const Company = require('./models/company');
 require('./db');
 
 /**
- * Middlewhere
+ * Middleware
  */
 app.use(cors());
 app.use(logger());
@@ -26,15 +26,16 @@ app.use(bodyParser());
 
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
-  if (!token) return await next();
+  if (!token || token.split(' ')[0] === 'Basic') return await next();
   token = token.split(' ').pop();
+  let decoded;
   try {
-    const decoded = jwt.verify(token, "$ecret%&wor£d");
+    decoded = jwt.verify(token, "$secretword");
   } catch (e) {
-    return await(next);
+    return await next();
   }
-  ctx.user = await Company.findOne({username: decoded.username});
-  return await next();
+  ctx.company = await Company.findOne({username: decoded.username});
+  await next();
 });
 
 /**

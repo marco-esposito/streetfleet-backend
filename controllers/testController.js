@@ -26,3 +26,7 @@ exports.testAdd = ctx => {
 
 		Company.create(data);
 }
+
+exports.test = ctx => {
+	ctx.body = 'Hey!';
+}

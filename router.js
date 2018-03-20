@@ -9,17 +9,18 @@ const router = new Router({
 });
 
 const authorize = async (ctx, next) => {
-  if (!ctx.user) {
+  console.log('Kimba!');
+  if (!ctx.company) {
     ctx.status = 401;
     ctx.body = 'Unauthorized';
     return;
   }
-
   await next();
 };
 
 router
-  .get('/testroute', test.testAdd)
+  // .get('/testroute', test.testAdd)
+  // .get('/testauthorize', authorize, test.test)
 
   // .get('/fleet', authorize, car.getFleet)
   // .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
@@ -30,11 +31,11 @@ router
   // .post('/fleet/car/location', car.postLocation
   //
   .post('/company/sign-up', company.signUp)
-  // .get('/company/sign-in', company.signIn)
+  .get('/company/sign-in', company.signIn)
 
 
   .get('/*', ctx => {
-    ctx.body = `<h1>Sorry the page does not exist</h1>`
+    ctx.body = `The route doesn't exist`
     ctx.status = 404
   });
 
