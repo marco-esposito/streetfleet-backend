@@ -8,6 +8,16 @@ const router = new Router({
     prefix: '/api/v1'
 });
 
+const authorize = async (ctx, next) => {
+  if (!ctx.user) {
+    ctx.status = 401;
+    ctx.body = 'Unauthorized';
+    return;
+  }
+
+  await next();
+};
+
 router
   .get('/testroute', test.testAdd)
 
@@ -19,7 +29,7 @@ router
   // .get('/fleet/car/trips/:license_number', car.getTripLogs)
   // .post('/fleet/car/location', car.postLocation
   //
-  // .post('/company/sign-up', company.signUp)
+  .post('/company/sign-up', company.signUp)
   // .get('/company/sign-in', company.signIn)
 
 

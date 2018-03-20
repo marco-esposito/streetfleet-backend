@@ -5,3 +5,7 @@
 // const saltRounds = 10;
 
 const company = require('../models/company');
+
+exports.signUp = () => {
+  
+};
