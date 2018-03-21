@@ -28,3 +28,8 @@ exports.delete = ctx => {
     ctx.body = 'Car not found'
   }
 };
+
+exports.getFleet = ctx => {
+  ctx.status = 200;
+  ctx.body = ctx.company.fleet;
+};

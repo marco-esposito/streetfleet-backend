@@ -21,7 +21,7 @@ router
   // .get('/testroute', test.testAdd)
   // .get('/testauthorize', authorize, test.authorize)
 
-  // .get('/fleet', authorize, car.getFleet)
+  .get('/fleet', authorize, car.getFleet)
   // .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
   .get('/fleet/car/:license_number', authorize, car.get)
   .delete('/fleet/car/:license_number', authorize, car.delete)
