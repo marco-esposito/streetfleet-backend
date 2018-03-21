@@ -3,6 +3,16 @@ const Company = require('../models/company');
 const Location = require('../models/location');
 
 const addOrUpdate = ctx => {
+	if (!(ctx.request.body.model &&
+					ctx.params.license_number &&
+					ctx.request.body.mac_address &&
+					ctx.request.body.type &&
+					ctx.request.body.year &&
+					ctx.request.body.make)) {
+		ctx.status = 400;
+		ctx.body ='Incomplete request';
+		return;
+	}
 	const matchingVehicle = ctx.company.fleet.filter( vehicle => {
 		return (vehicle.license_number===ctx.params.license_number)
 	});
@@ -16,7 +26,8 @@ const addOrUpdate = ctx => {
 		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
 		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
 			if (err) throw Error;
-		})
+		});
+		ctx.status = 204;
 	}
 
 	// add the matchingVehicle if no vehicle with that license number is found
@@ -34,7 +45,7 @@ const addOrUpdate = ctx => {
 				model: ctx.request.body.model,
 				license_number: ctx.params.license_number,
 				vType: ctx.request.body.type,
-				make: ctx.request.body.make
+				make: ctx.request.body.make,
 				year: ctx.request.body.year,
 				mac_address: ctx.request.body.mac_address
 			}
@@ -42,16 +53,18 @@ const addOrUpdate = ctx => {
 		ctx.company.save(err => {
 			if (err) return next(err)
 		});
+		ctx.status = 201;
+		ctx.body = {
+			license_number: ctx.params.license_number,
+			model: ctx.request.body.model,
+			type: ctx.request.body.type,
+			make: ctx.request.body.make,
+			year: ctx.request.body.year
+		};
+
 	}
 
-	ctx.status = 200;
-	ctx.body = {
-		license_number: ctx.params.license_number,
-		model: ctx.request.body.model,
-		type: ctx.request.body.type,
-		make: ctx.request.body.make,
-		year: ctx.request.body.year
-	};
+
 };
 
 const getVehicle = ctx => {
