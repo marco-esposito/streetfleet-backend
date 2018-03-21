@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const LocationSchema = new Schema([{
-	car_id: String,
-	timestamp: Date,
+	mac_address: String,
+	time: Date,
 	latitude: Number,
-	longtitude: Number
+	longitude: Number
 }])
 
 module.exports = mongoose.model('Location', LocationSchema);
