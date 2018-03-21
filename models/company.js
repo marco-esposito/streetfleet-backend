@@ -10,7 +10,6 @@ const CompanySchema = new Schema({
 	password: String,
 	fleet:[
 		{
-			car_id: String,
 			car_model: String,
 			license_number: String,
 			mac_address: String,
