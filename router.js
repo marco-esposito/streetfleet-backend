@@ -1,5 +1,5 @@
 'use strict';
-const car = require('./controllers/carsController');
+const vehicle = require('./controllers/vehiclesController');
 const test = require('./controllers/testController');
 const company = require('./controllers/companiesController');
 
@@ -21,14 +21,14 @@ router
   // .get('/testroute', test.testAdd)
   // .get('/testauthorize', authorize, test.authorize)
 
-  .get('/fleet', authorize, car.getFleet)
-  .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
-  .get('/fleet/car/:license_number', authorize, car.getCar)
-  .delete('/fleet/car/:license_number', authorize, car.deleteCar)
+  .get('/fleet', authorize, vehicle.getFleet)
+  .put('/fleet/vehicle/:license_number', authorize, vehicle.addOrUpdate)
+  .get('/fleet/vehicle/:license_number', authorize, vehicle.getVehicle)
+  .delete('/fleet/vehicle/:license_number', authorize, vehicle.deleteVehicle)
 
-  //NOTE: car.getTripLogs will have to be faked for MVP
-  // .get('/fleet/car/trips/:license_number', authorize, car.getTripLogs)
-  // .post('/fleet/car/location', car.postLocation
+  //NOTE: vehicle.getTripLogs will have to be faked for MVP
+  // .get('/fleet/vehicle/trips/:license_number', authorize, vehicle.getTripLogs)
+  // .post('/fleet/vehicle/location', vehicle.postLocation
   //
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)

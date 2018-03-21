@@ -34,26 +34,26 @@ const addOrUpdate = ctx => {
 	}
 };
 
-const getCar = ctx => {
-  const car = ctx.company.fleet.filter(car => car.license_number === ctx.params.license_number);
-  if (car.length) {
+const getVehicle = ctx => {
+  const vehicle = ctx.company.fleet.filter(vehicle => vehicle.license_number === ctx.params.license_number);
+  if (vehicle.length) {
     ctx.status = 200;
-    ctx.body = car;
+    ctx.body = vehicle;
   } else {
     ctx.status = 404;
-    ctx.body = 'Car not found'
+    ctx.body = 'Vehicle not found'
   }
 };
 
-const deleteCar = ctx => {
-  const removeIndex = ctx.company.fleet.map(car => car.license_number).indexOf(ctx.params.license_number);
+const deleteVehicle = ctx => {
+  const removeIndex = ctx.company.fleet.map(vehicle => vehicle.license_number).indexOf(ctx.params.license_number);
   if (removeIndex !== -1) {
     ctx.company.fleet.splice(removeIndex, 1);
     ctx.company.save();
     ctx.status = 204;
   } else {
     ctx.status = 404;
-    ctx.body = 'Car not found'
+    ctx.body = 'Vehicle not found'
   }
 };
 
@@ -62,4 +62,4 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-module.exports = { addOrUpdate, getCar, deleteCar, getFleet };
+module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet };
