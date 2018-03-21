@@ -23,8 +23,8 @@ router
 
   .get('/fleet', authorize, car.getFleet)
   .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
-  .get('/fleet/car/:license_number', authorize, car.get)
-  .delete('/fleet/car/:license_number', authorize, car.delete)
+  .get('/fleet/car/:license_number', authorize, car.getCar)
+  .delete('/fleet/car/:license_number', authorize, car.deleteCar)
 
   //NOTE: car.getTripLogs will have to be faked for MVP
   // .get('/fleet/car/trips/:license_number', authorize, car.getTripLogs)

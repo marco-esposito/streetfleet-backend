@@ -34,7 +34,7 @@ const addOrUpdate = ctx => {
 	}
 };
 
-const get = ctx => {
+const getCar = ctx => {
   const car = ctx.company.fleet.filter(car => car.license_number === ctx.params.license_number);
   if (car.length) {
     ctx.status = 200;
@@ -45,7 +45,7 @@ const get = ctx => {
   }
 };
 
-const delete = ctx => {
+const deleteCar = ctx => {
   const removeIndex = ctx.company.fleet.map(car => car.license_number).indexOf(ctx.params.license_number);
   if (removeIndex !== -1) {
     ctx.company.fleet.splice(removeIndex, 1);
@@ -62,4 +62,4 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-module.exports = { addOrUpdate, get, delete, getFleet };
+module.exports = { addOrUpdate, getCar, deleteCar, getFleet };
