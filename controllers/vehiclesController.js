@@ -2,35 +2,78 @@
 const Company = require('../models/company');
 const Location = require('../models/location');
 
-//TODO: add trip schema for getting trip logs. We will generate this from 'journey' schema. Will have to be mocked for MVP
-
 const addOrUpdate = ctx => {
-	console.log('ctx.company: ', ctx.company);
-	console.log('ctx.params: ', ctx.params);
-	const carOne = ctx.company.fleet.filter( car => {
-		return (car.license_number===ctx.params.license_number)
+	console.log('CTX.COMPANY: ', ctx.company);
+	console.log('CTX.PARAMS: ', ctx.params);
+	const matchingVehicle = ctx.company.fleet.filter( vehicle => {
+		console.log('vehicle: ', vehicle);
+		return (vehicle.license_number===ctx.params.license_number)
 	});
-	console.log('carOne: ', carOne);
 
-	if (carOne.length < 0) {
-				carOne.mac_address = ctx.req.body.mac_address || carOne.mac_address;
-				carOne.carOne_model = ctx.req.body.carOne_model || carOne.carOne_model;
-				carOne.license_number = ctx.req.body.carOne.license_number || carOne.CarOne
+	console.log('MATCHINGVEHICLE: ', matchingVehicle);
+	if (matchingVehicle.length > 0) {
+		console.log('we entered the if!!!');
+		// NOTE: 'useFindAndModify': true by default. Set to false to make findOneAndUpdate() and findOneAndRemove() use native findOneAndUpdate() rather than findAndModify().
+		// upsert: bool - creates the object if it doesn't exist. defaults to false.
+
+		// console.log('matchingVehicle (inside): ', matchingVehicle);
+		// Company.findOneAndUpdate({'company_name': ctx.company, 'fleet._id': matchingVehicle._id }, {'fleet.$.mac_address' = ctx.request.body.mac_address,
+		// 'fleet.$.model' = ctx.request.body.model,
+		// 'fleet.$.license_number' = ctx.params.license_number }, (err, vehicleDocument) => {
+		// 	if (err) throw Error;
+		// 	// can do something with vehicleDocument her if you wanted.
+		// })
+		console.log('MATCHINGVEHICLE (INSIDE): ', matchingVehicle[0]);
+
+		// Company.findOneAndUpdate({'company_name': ctx.company, 'fleet._id': matchingVehicle[0]._id },
+		// {'fleet.$.mac_address' = ctx.request.body.mac_address}, (err, vehicleDocument) => {
+			// if (err) throw Error;
+			// can do something with vehicleDocument her if you wanted.
+		// })
+
+			console.log('MATCHINGVEHICLE (AFTER): ', matchingVehicle[0]);
 	}
-	// add the carOne if no car with that license number is found
-	else if ( ctx.request.body.model &&
-	 				ctx.params.license_number &&
-					ctx.request.body.mac_address ){
+	// ctx.request.body.model &&
+	// 				ctx.params.license_number &&
+	// 				ctx.request.body.mac_address &&
+	// 				ctx.request.body.type &&
+	// 				ctx.request.body.year &&
+	// 				ctx.request.body.make
+
+	// add the matchingVehicle if no vehicle with that license number is found
+	else if (ctx.request.body.model &&
+					ctx.params.license_number &&
+					ctx.request.body.mac_address &&
+					ctx.request.body.type &&
+					ctx.request.body.year &&
+					ctx.request.body.make){
+						console.log('we entered the else if!');
+						console.log('ctx.request.body: ', ctx.request.body);
+		// could also have done soemthign like this: var newdoc = parent.children.create({ name: 'Aaron' });
 		ctx.company.fleet.push(
 			{
-				car_model: ctx.request.body.model,
+				model: ctx.request.body.model,
 				license_number: ctx.params.license_number,
 				mac_address: ctx.request.body.mac_address,
-				total_driving_time: 0,
-				total_miles_driven: 0,
-			}
+				year: ctx.request.body.year,
+				model: ctx.request.body.model,
+				vType: ctx.request.body.type,
+				make: ctx.request.body.make
+						}
 		);
-		ctx.company.save();
+		ctx.company.save(err => {
+			if (err) return next(err)
+		});
+		ctx.status = 200;
+		ctx.body = {
+			make: ctx.request.body.make,
+			license_number: ctx.params.license_number,
+			mac_address: ctx.request.body.mac_address,
+			year: ctx.request.body.year,
+			model: ctx.request.body.model,
+			type: ctx.request.body.type,
+		}
+
 	}
 };
 

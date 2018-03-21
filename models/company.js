@@ -10,10 +10,10 @@ const CompanySchema = new Schema({
 	password: String,
 	fleet:[
 		{
-			type: String,
+			vType: String,
 			make: String,
 			model: String,
-			year: String,
+			year: Date,
 			license_number: String,
 			mac_address: String,
 			total_driving_time: Number,
