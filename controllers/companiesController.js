@@ -31,13 +31,17 @@ exports.signUp = async ctx => {
     	fleet:[]
     }
 
-    const response = await Company.create(company);
-    ctx.body = {
-      company_name: response.company_name,
-      username: response.username,
-      email: response.email
+    try {
+      const response = await Company.create(company);
+      ctx.body = {
+        company_name: response.company_name,
+        username: response.username,
+        email: response.email
+      };
+      ctx.status = 201;
+    } catch (e) {
+      console.error(e);
     }
-    ctx.status = 201;
   }
 };
 

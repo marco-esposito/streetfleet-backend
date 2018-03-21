@@ -28,12 +28,7 @@ const addOrUpdate = ctx => {
 	}
 
 	// add the matchingVehicle if no vehicle with that license number is found
-	else if (ctx.request.body.model &&
-					ctx.params.license_number &&
-					ctx.request.body.mac_address &&
-					ctx.request.body.type &&
-					ctx.request.body.year &&
-					ctx.request.body.make){
+	else {
 
 		ctx.company.fleet.push(
 			{
@@ -93,4 +88,26 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet };
+const postLocation = async ctx => {
+	const userData = ctx.request.body;
+	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
+		ctx.status = 400;
+		ctx.body = 'Incomplete body';
+		return;
+	}
+	const location = {
+		mac_address: userData.mac_address,
+		time: userData.time,
+		latitude: userData.latitude,
+		longitude: userData.longitude
+	}
+	try {
+		const response = await Location.create(location);
+		ctx.status = 201;
+		ctx.body = response;
+	} catch (e) {
+		console.error(e);
+	}
+};
+
+module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet, postLocation };
