@@ -18,7 +18,7 @@ const addOrUpdate = ctx => {
 	});
 
 	if (matchingVehicle.length > 0) {
-		
+
 		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
 		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
 		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
@@ -28,12 +28,7 @@ const addOrUpdate = ctx => {
 	}
 
 	// add the matchingVehicle if no vehicle with that license number is found
-	else if (ctx.request.body.model &&
-					ctx.params.license_number &&
-					ctx.request.body.mac_address &&
-					ctx.request.body.type &&
-					ctx.request.body.year &&
-					ctx.request.body.make){
+	else {
 
 		ctx.company.fleet.push(
 			{
@@ -54,7 +49,8 @@ const addOrUpdate = ctx => {
 			model: ctx.request.body.model,
 			type: ctx.request.body.type,
 			make: ctx.request.body.make,
-			year: ctx.request.body.year
+			year: ctx.request.body.year,
+			mac_address: ctx.request.body.mac_address
 		};
 
 	}
@@ -77,7 +73,9 @@ const deleteVehicle = ctx => {
   const removeIndex = ctx.company.fleet.map(vehicle => vehicle.license_number).indexOf(ctx.params.license_number);
   if (removeIndex !== -1) {
     ctx.company.fleet.splice(removeIndex, 1);
-    ctx.company.save();
+    ctx.company.save(err => {
+			if (err) return next(err)
+		});
     ctx.status = 204;
   } else {
     ctx.status = 404;
@@ -90,4 +88,26 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet };
+const postLocation = async ctx => {
+	const userData = ctx.request.body;
+	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
+		ctx.status = 400;
+		ctx.body = 'Incomplete body';
+		return;
+	}
+	const location = {
+		mac_address: userData.mac_address,
+		time: userData.time,
+		latitude: userData.latitude,
+		longitude: userData.longitude
+	}
+	try {
+		const response = await Location.create(location);
+		ctx.status = 201;
+		ctx.body = response;
+	} catch (e) {
+		console.error(e);
+	}
+};
+
+module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet, postLocation };

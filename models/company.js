@@ -13,7 +13,7 @@ const CompanySchema = new Schema({
 			vType: String,
 			make: String,
 			model: String,
-			year: Date,
+			year: Number,
 			license_number: String,
 			mac_address: String,
 			total_driving_time: Number,
@@ -22,4 +22,4 @@ const CompanySchema = new Schema({
 	]
 });
 
-module.exports = mongoose.model('Company', CompanySchema, 'Companies');
+module.exports = mongoose.model('Company', CompanySchema, 'companies');

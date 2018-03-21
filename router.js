@@ -28,15 +28,15 @@ router
 
   //NOTE: vehicle.getTripLogs will have to be faked for MVP
   // .get('/fleet/vehicle/trips/:license_number', authorize, vehicle.getTripLogs)
-  // .post('/fleet/vehicle/location', vehicle.postLocation
-  //
+  .post('/fleet/vehicle/location', vehicle.postLocation)
+
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)
 
 
   .get('/*', ctx => {
-    ctx.body = `The route doesn't exist`
-    ctx.status = 404
+    ctx.body = `The route doesn't exist`;
+    ctx.status = 404;
   });
 
 module.exports = router;
