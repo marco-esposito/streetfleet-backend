@@ -16,29 +16,19 @@ const addOrUpdate = ctx => {
 		// NOTE: 'useFindAndModify': true by default. Set to false to make findOneAndUpdate() and findOneAndRemove() use native findOneAndUpdate() rather than findAndModify().
 		// upsert: bool - creates the object if it doesn't exist. defaults to false.
 
-		// console.log('matchingVehicle (inside): ', matchingVehicle);
-		// Company.findOneAndUpdate({'company_name': ctx.company, 'fleet._id': matchingVehicle._id }, {'fleet.$.mac_address' = ctx.request.body.mac_address,
-		// 'fleet.$.model' = ctx.request.body.model,
-		// 'fleet.$.license_number' = ctx.params.license_number }, (err, vehicleDocument) => {
-		// 	if (err) throw Error;
-		// 	// can do something with vehicleDocument her if you wanted.
-		// })
+
+
 		console.log('MATCHINGVEHICLE (INSIDE): ', matchingVehicle[0]);
 
-		// Company.findOneAndUpdate({'company_name': ctx.company, 'fleet._id': matchingVehicle[0]._id },
-		// {'fleet.$.mac_address' = ctx.request.body.mac_address}, (err, vehicleDocument) => {
-			// if (err) throw Error;
+		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
+		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
+		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
+			if (err) throw Error;
 			// can do something with vehicleDocument her if you wanted.
-		// })
+		})
 
 			console.log('MATCHINGVEHICLE (AFTER): ', matchingVehicle[0]);
 	}
-	// ctx.request.body.model &&
-	// 				ctx.params.license_number &&
-	// 				ctx.request.body.mac_address &&
-	// 				ctx.request.body.type &&
-	// 				ctx.request.body.year &&
-	// 				ctx.request.body.make
 
 	// add the matchingVehicle if no vehicle with that license number is found
 	else if (ctx.request.body.model &&
