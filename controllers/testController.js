@@ -26,6 +26,6 @@ exports.testAdd = ctx => {
 		// Company.create(data);
 }
 
-exports.test = ctx => {
+exports.authorize = ctx => {
 	ctx.body = 'Hey!';
 }

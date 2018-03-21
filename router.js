@@ -9,7 +9,6 @@ const router = new Router({
 });
 
 const authorize = async (ctx, next) => {
-  // console.log('Kimba!');
   if (!ctx.company) {
     ctx.status = 401;
     ctx.body = 'Unauthorized';
@@ -20,15 +19,16 @@ const authorize = async (ctx, next) => {
 
 router
   // .get('/testroute', test.testAdd)
-  // .get('/testauthorize', authorize, test.test)
+  // .get('/testauthorize', authorize, test.authorize)
 
-  // .get('/fleet', car.getFleet)
+  .get('/fleet', authorize, vehicle.getFleet)
   .put('/fleet/vehicle/:license_number', authorize, vehicle.addOrUpdate)
-  // .get('/fleet/car/:license_number', car.get)
-  // .delete('/fleet/car/:license_number', car.delete)
-  // //NOTE: car.getTripLogs will have to be faked for MVP
-  // .get('/fleet/car/trips/:license_number', authorize, car.getTripLogs)
-  // .post('/fleet/car/location', car.postLocation
+  .get('/fleet/vehicle/:license_number', authorize, vehicle.getVehicle)
+  .delete('/fleet/vehicle/:license_number', authorize, vehicle.deleteVehicle)
+
+  //NOTE: vehicle.getTripLogs will have to be faked for MVP
+  // .get('/fleet/vehicle/trips/:license_number', authorize, vehicle.getTripLogs)
+  // .post('/fleet/vehicle/location', vehicle.postLocation
   //
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)

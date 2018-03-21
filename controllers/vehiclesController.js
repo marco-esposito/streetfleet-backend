@@ -2,68 +2,64 @@
 const Company = require('../models/company');
 const Location = require('../models/location');
 
+//TODO: add trip schema for getting trip logs. We will generate this from 'journey' schema. Will have to be mocked for MVP
+
 const addOrUpdate = ctx => {
 	console.log('ctx.company: ', ctx.company);
 	console.log('ctx.params: ', ctx.params);
-	const matchingVehicle = ctx.company.fleet.filter( vehicle => {
-		console.log('vehicle: ', vehicle);
-		return (vehicle.license_number===ctx.params.license_number)
+	const carOne = ctx.company.fleet.filter( car => {
+		return (car.license_number===ctx.params.license_number)
 	});
+	console.log('carOne: ', carOne);
 
-	console.log('matchingVehicle: ', matchingVehicle);
-	if (matchingVehicle.length > 0) {
-		// NOTE: 'useFindAndModify': true by default. Set to false to make findOneAndUpdate() and findOneAndRemove() use native findOneAndUpdate() rather than findAndModify().
-		// upsert: bool - creates the object if it doesn't exist. defaults to false.
-
-		// console.log('matchingVehicle (inside): ', matchingVehicle);
-		// Company.findOneAndUpdate({'company_name': ctx.company, 'fleet._id': matchingVehicle._id }, {'fleet.$.mac_address' = ctx.request.body.mac_address,
-		// 'fleet.$.model' = ctx.request.body.model,
-		// 'fleet.$.license_number' = ctx.params.license_number }, (err, vehicleDocument) => {
-		// 	if (err) throw Error;
-		// 	// can do something with vehicleDocument her if you wanted.
-		// })
-		console.log('matchingVehicle (inside): ', matchingVehicle);
-		Company.findOneAndUpdate({'company_name': ctx.company, 'fleet._id': matchingVehicle._id },
-		{'fleet.$.mac_address' = ctx.request.body.mac_address}, (err, vehicleDocument) => {
-			if (err) throw Error;
-			// can do something with vehicleDocument her if you wanted.
-		})
-
-			console.log('matchingVehicle (after): ', matchingVehicle);
+	if (carOne.length < 0) {
+				carOne.mac_address = ctx.req.body.mac_address || carOne.mac_address;
+				carOne.carOne_model = ctx.req.body.carOne_model || carOne.carOne_model;
+				carOne.license_number = ctx.req.body.carOne.license_number || carOne.CarOne
 	}
-	// add the matchingVehicle if no vehicle with that license number is found
+	// add the carOne if no car with that license number is found
 	else if ( ctx.request.body.model &&
 	 				ctx.params.license_number &&
 					ctx.request.body.mac_address ){
-		// could also have done soemthign like this: var newdoc = parent.children.create({ name: 'Aaron' });
 		ctx.company.fleet.push(
 			{
-				model: ctx.request.body.model,
+				car_model: ctx.request.body.model,
 				license_number: ctx.params.license_number,
 				mac_address: ctx.request.body.mac_address,
-				year: ctx.request.body.year,
-				model: ctx.request.body.model
-						}
+				total_driving_time: 0,
+				total_miles_driven: 0,
+			}
 		);
-		ctx.company.save(err => {
-			if (err) return next(err)
-		});
-		ctx.status = 200;
-		ctx.body = {
-			make: ctx.request.body.make,
-			license_number: ctx.params.license_number,
-			mac_address: ctx.request.body.mac_address,
-			year: ctx.request.body.year,
-			model: ctx.request.body.model
-		}
-
+		ctx.company.save();
 	}
 };
 
-//TODO: add trip schema for getting trip logs. We will generate this from 'journey' schema. Will have to be mocked for MVP
-module.exports = { addOrUpdate };
+const getVehicle = ctx => {
+  const vehicle = ctx.company.fleet.filter(vehicle => vehicle.license_number === ctx.params.license_number);
+  if (vehicle.length) {
+    ctx.status = 200;
+    ctx.body = vehicle;
+  } else {
+    ctx.status = 404;
+    ctx.body = 'Vehicle not found'
+  }
+};
 
+const deleteVehicle = ctx => {
+  const removeIndex = ctx.company.fleet.map(vehicle => vehicle.license_number).indexOf(ctx.params.license_number);
+  if (removeIndex !== -1) {
+    ctx.company.fleet.splice(removeIndex, 1);
+    ctx.company.save();
+    ctx.status = 204;
+  } else {
+    ctx.status = 404;
+    ctx.body = 'Vehicle not found'
+  }
+};
 
-// ctx.company.save( err => {
-// 	if (err) return next(err)
-// });
+const getFleet = ctx => {
+  ctx.status = 200;
+  ctx.body = ctx.company.fleet;
+};
+
+module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet };
