@@ -3,24 +3,19 @@ const Company = require('../models/company');
 const Location = require('../models/location');
 
 const addOrUpdate = ctx => {
-	console.log('CTX.COMPANY: ', ctx.company);
-	console.log('CTX.PARAMS: ', ctx.params);
 	const matchingVehicle = ctx.company.fleet.filter( vehicle => {
-		console.log('vehicle: ', vehicle);
 		return (vehicle.license_number===ctx.params.license_number)
 	});
 
-	console.log('MATCHINGVEHICLE: ', matchingVehicle);
+	// console.log('MATCHINGVEHICLE: ', matchingVehicle);
 	if (matchingVehicle.length > 0) {
-		console.log('we entered the if!!!');
-		// NOTE: 'useFindAndModify': true by default. Set to false to make findOneAndUpdate() and findOneAndRemove() use native findOneAndUpdate() rather than findAndModify().
-		// upsert: bool - creates the object if it doesn't exist. defaults to false.
-		console.log('MATCHINGVEHICLE (INSIDE): ', matchingVehicle[0]);
+		// console.log('we entered the if!!!');
+		// console.log('MATCHINGVEHICLE (INSIDE): ', matchingVehicle[0]);
+
 		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
 		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
 		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
 			if (err) throw Error;
-			// can do something with vehicleDocument her if you wanted.
 		})
 	}
 
@@ -31,33 +26,32 @@ const addOrUpdate = ctx => {
 					ctx.request.body.type &&
 					ctx.request.body.year &&
 					ctx.request.body.make){
-						console.log('we entered the else if!');
-						console.log('ctx.request.body: ', ctx.request.body);
-		// could also have done soemthign like this: var newdoc = parent.children.create({ name: 'Aaron' });
+		console.log('we entered the else if!');
+		console.log('ctx.request.body: ', ctx.request.body);
+
 		ctx.company.fleet.push(
 			{
 				model: ctx.request.body.model,
 				license_number: ctx.params.license_number,
-				mac_address: ctx.request.body.mac_address,
-				year: ctx.request.body.year,
-				model: ctx.request.body.model,
 				vType: ctx.request.body.type,
 				make: ctx.request.body.make
-						}
+				year: ctx.request.body.year,
+				mac_address: ctx.request.body.mac_address
+			}
 		);
 		ctx.company.save(err => {
 			if (err) return next(err)
 		});
 	}
+
 	ctx.status = 200;
 	ctx.body = {
-		make: ctx.request.body.make,
 		license_number: ctx.params.license_number,
-		mac_address: ctx.request.body.mac_address,
-		year: ctx.request.body.year,
 		model: ctx.request.body.model,
 		type: ctx.request.body.type,
-	}
+		make: ctx.request.body.make,
+		year: ctx.request.body.year
+	};
 };
 
 const getVehicle = ctx => {
