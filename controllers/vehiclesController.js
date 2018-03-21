@@ -18,7 +18,7 @@ const addOrUpdate = ctx => {
 	});
 
 	if (matchingVehicle.length > 0) {
-		
+
 		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
 		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
 		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
@@ -54,7 +54,8 @@ const addOrUpdate = ctx => {
 			model: ctx.request.body.model,
 			type: ctx.request.body.type,
 			make: ctx.request.body.make,
-			year: ctx.request.body.year
+			year: ctx.request.body.year,
+			mac_address: ctx.request.body.mac_address
 		};
 
 	}
@@ -77,7 +78,9 @@ const deleteVehicle = ctx => {
   const removeIndex = ctx.company.fleet.map(vehicle => vehicle.license_number).indexOf(ctx.params.license_number);
   if (removeIndex !== -1) {
     ctx.company.fleet.splice(removeIndex, 1);
-    ctx.company.save();
+    ctx.company.save(err => {
+			if (err) return next(err)
+		});
     ctx.status = 204;
   } else {
     ctx.status = 404;
