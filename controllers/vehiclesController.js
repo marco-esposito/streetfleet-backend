@@ -17,11 +17,8 @@ const addOrUpdate = ctx => {
 		return (vehicle.license_number===ctx.params.license_number)
 	});
 
-	// console.log('MATCHINGVEHICLE: ', matchingVehicle);
 	if (matchingVehicle.length > 0) {
-		// console.log('we entered the if!!!');
-		// console.log('MATCHINGVEHICLE (INSIDE): ', matchingVehicle[0]);
-
+		
 		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
 		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
 		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
@@ -37,8 +34,6 @@ const addOrUpdate = ctx => {
 					ctx.request.body.type &&
 					ctx.request.body.year &&
 					ctx.request.body.make){
-		console.log('we entered the else if!');
-		console.log('ctx.request.body: ', ctx.request.body);
 
 		ctx.company.fleet.push(
 			{
