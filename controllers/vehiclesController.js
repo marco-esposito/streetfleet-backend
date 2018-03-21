@@ -2,36 +2,64 @@
 const Company = require('../models/company');
 const Location = require('../models/location');
 
-//TODO: add trip schema for getting trip logs. We will generate this from 'journey' schema. Will have to be mocked for MVP
-
 const addOrUpdate = ctx => {
-	console.log('ctx.company: ', ctx.company);
-	console.log('ctx.params: ', ctx.params);
-	const carOne = ctx.company.fleet.filter( car => {
-		return (car.license_number===ctx.params.license_number)
-	});
-	console.log('carOne: ', carOne);
-
-	if (carOne.length < 0) {
-				carOne.mac_address = ctx.req.body.mac_address || carOne.mac_address;
-				carOne.carOne_model = ctx.req.body.carOne_model || carOne.carOne_model;
-				carOne.license_number = ctx.req.body.carOne.license_number || carOne.CarOne
+	if (!(ctx.request.body.model &&
+					ctx.params.license_number &&
+					ctx.request.body.mac_address &&
+					ctx.request.body.type &&
+					ctx.request.body.year &&
+					ctx.request.body.make)) {
+		ctx.status = 400;
+		ctx.body ='Incomplete request';
+		return;
 	}
-	// add the carOne if no car with that license number is found
-	else if ( ctx.request.body.model &&
-	 				ctx.params.license_number &&
-					ctx.request.body.mac_address ){
+	const matchingVehicle = ctx.company.fleet.filter( vehicle => {
+		return (vehicle.license_number===ctx.params.license_number)
+	});
+
+	if (matchingVehicle.length > 0) {
+		
+		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
+		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
+		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
+			if (err) throw Error;
+		});
+		ctx.status = 204;
+	}
+
+	// add the matchingVehicle if no vehicle with that license number is found
+	else if (ctx.request.body.model &&
+					ctx.params.license_number &&
+					ctx.request.body.mac_address &&
+					ctx.request.body.type &&
+					ctx.request.body.year &&
+					ctx.request.body.make){
+
 		ctx.company.fleet.push(
 			{
-				car_model: ctx.request.body.model,
+				model: ctx.request.body.model,
 				license_number: ctx.params.license_number,
-				mac_address: ctx.request.body.mac_address,
-				total_driving_time: 0,
-				total_miles_driven: 0,
+				vType: ctx.request.body.type,
+				make: ctx.request.body.make,
+				year: ctx.request.body.year,
+				mac_address: ctx.request.body.mac_address
 			}
 		);
-		ctx.company.save();
+		ctx.company.save(err => {
+			if (err) return next(err)
+		});
+		ctx.status = 201;
+		ctx.body = {
+			license_number: ctx.params.license_number,
+			model: ctx.request.body.model,
+			type: ctx.request.body.type,
+			make: ctx.request.body.make,
+			year: ctx.request.body.year
+		};
+
 	}
+
+
 };
 
 const getVehicle = ctx => {
