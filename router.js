@@ -1,5 +1,5 @@
 'use strict';
-const car = require('./controllers/carsController');
+const vehicle = require('./controllers/vehiclesController');
 const test = require('./controllers/testController');
 const company = require('./controllers/companiesController');
 
@@ -9,7 +9,7 @@ const router = new Router({
 });
 
 const authorize = async (ctx, next) => {
-  console.log('Kimba!');
+  // console.log('Kimba!');
   if (!ctx.company) {
     ctx.status = 401;
     ctx.body = 'Unauthorized';
@@ -23,7 +23,7 @@ router
   // .get('/testauthorize', authorize, test.test)
 
   // .get('/fleet', car.getFleet)
-  .put('/fleet/car/:license_number', authorize, car.addOrUpdate)
+  .put('/fleet/vehicle/:license_number', authorize, vehicle.addOrUpdate)
   // .get('/fleet/car/:license_number', car.get)
   // .delete('/fleet/car/:license_number', car.delete)
   // //NOTE: car.getTripLogs will have to be faked for MVP
