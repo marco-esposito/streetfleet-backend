@@ -2,7 +2,7 @@
 const Company = require('../models/company');
 const Location = require('../models/location');
 
-const updateVehicle = ctx => {
+const updateVehicle = async ctx => {
 	const userData = ctx.request.body;
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
@@ -15,10 +15,14 @@ const updateVehicle = ctx => {
 		return (vehicle._id.toString() === ctx.params.vehicle_id)
 	});
 	if (matchingVehicles.length > 0) {
-		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicles[0]._id }, {
-		'fleet.$.mac_address': userData.mac_address, 'fleet.$.model': userData.model,
-		'fleet.$.license_number': userData.license_number, 'fleet.$.vType': userData.vType, 'fleet.$.make': userData.make, 'fleet.$.year': userData.year }, (err, vehicleDocument) => {
-			if (err) throw Error;
+		matchingVehicles[0].mac_address = userData.mac_address;
+		matchingVehicles[0].model = userData.model;
+		matchingVehicles[0].license_number = userData.license_number;
+		matchingVehicles[0].vType = userData.vType;
+		matchingVehicles[0].year = userData.year;
+		matchingVehicles[0].make = userData.make;
+		await matchingVehicles.save(err => {
+			if (err) return next(err);
 		});
 		ctx.status = 204;
 	}	else {
