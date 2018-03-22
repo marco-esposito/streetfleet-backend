@@ -32,7 +32,7 @@ io.on('connection',(client) => {
   client.on('subscribeToTimer', (interval) => {
     console.log('client');
     setInterval(() => {
-      client.emit('timer', new Date());
+      client.emit('timer', 'hello');
     }, interval);
   });
 });
