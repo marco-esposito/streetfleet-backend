@@ -24,9 +24,11 @@ app.use(cors());
 app.use(logger());
 app.use(bodyParser());
 
+//middleware for authentication
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
   if (!token || token.split(' ')[0] === 'Basic') return await next();
+
   token = token.split(' ').pop();
   let decoded;
   try {
