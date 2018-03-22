@@ -2,71 +2,65 @@
 const Company = require('../models/company');
 const Location = require('../models/location');
 
-const addOrUpdate = ctx => {
-	if (!(ctx.request.body.model &&
-					ctx.params.license_number &&
-					ctx.request.body.mac_address &&
-					ctx.request.body.vtype &&
-					ctx.request.body.year &&
-					ctx.request.body.make)) {
+const updateVehicle = ctx => {
+	const userData = ctx.request.body;
+	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
+	if (incompleteBody) {
 		ctx.status = 400;
 		ctx.body ='Incomplete request';
 		return;
 	}
-	const matchingVehicle = ctx.company.fleet.filter( vehicle => {
-		return (vehicle.license_number===ctx.params.license_number)
+
+	const matchingVehicles = ctx.company.fleet.filter( vehicle => {
+		return (vehicle._id.toString() === ctx.params.vehicle_id)
 	});
-
-	if (matchingVehicle.length > 0) {
-
-		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
-		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
-		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.vtype, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
+	if (matchingVehicles.length > 0) {
+		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicles[0]._id }, {
+		'fleet.$.mac_address': userData.mac_address, 'fleet.$.model': userData.model,
+		'fleet.$.license_number': userData.license_number, 'fleet.$.vType': userData.vType, 'fleet.$.make': userData.make, 'fleet.$.year': userData.year }, (err, vehicleDocument) => {
 			if (err) throw Error;
 		});
 		ctx.status = 204;
+	}	else {
+    ctx.status = 404;
+		ctx.body = 'Vehicle not found';
 	}
-
-	// add the matchingVehicle if no vehicle with that license number is found
-	else {
-
-		ctx.company.fleet.push(
-			{
-				model: ctx.request.body.model,
-				license_number: ctx.params.license_number,
-				vType: ctx.request.body.vtype,
-				make: ctx.request.body.make,
-				year: ctx.request.body.year,
-				mac_address: ctx.request.body.mac_address,
-				total_driving_time: 0,
-				total_miles_driven: 0
-			}
-		);
-		ctx.company.save(err => {
-			if (err) return next(err)
-		});
-		ctx.status = 201;
-		ctx.body = {
-			license_number: ctx.params.license_number,
-			model: ctx.request.body.model,
-			vtype: ctx.request.body.vtype,
-			make: ctx.request.body.make,
-			year: ctx.request.body.year,
-			mac_address: ctx.request.body.mac_address,
-			total_driving_time: 0,
-			total_miles_driven: 0
-		};
-
-	}
-
-
 };
 
+const addVehicle = async ctx => {
+	const userData = ctx.request.body;
+	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
+	if (incompleteBody) {
+		ctx.status = 400;
+		ctx.body ='Incomplete request';
+		return;
+	}
+
+	ctx.company.fleet.push(
+		{
+			model: userData.model,
+			license_number: userData.license_number,
+			vType: userData.vType,
+			make: userData.make,
+			year: userData.year,
+			mac_address: userData.mac_address,
+			total_driving_time: 0,
+			total_miles_driven: 0
+		}
+	);
+	await ctx.company.save((err, res) => {
+		if (err) return next(err);
+	});
+	ctx.status = 201;
+	ctx.body = ctx.company.fleet[ctx.company.fleet.length-1];
+}
+
 const getVehicle = ctx => {
-  const vehicle = ctx.company.fleet.filter(vehicle => vehicle.license_number === ctx.params.license_number);
-  if (vehicle.length) {
+  const vehicles = ctx.company.fleet.filter(vehicle =>
+		vehicle._id.toString() === ctx.params.vehicle_id);
+  if (vehicles.length) {
     ctx.status = 200;
-    ctx.body = vehicle[0];
+    ctx.body = vehicles[0];
   } else {
     ctx.status = 404;
     ctx.body = 'Vehicle not found'
@@ -74,7 +68,7 @@ const getVehicle = ctx => {
 };
 
 const deleteVehicle = ctx => {
-  const removeIndex = ctx.company.fleet.map(vehicle => vehicle.license_number).indexOf(ctx.params.license_number);
+  const removeIndex = ctx.company.fleet.map(vehicle => vehicle._id.toString()).indexOf(ctx.params.vehicle_id);
   if (removeIndex !== -1) {
     ctx.company.fleet.splice(removeIndex, 1);
     ctx.company.save(err => {
@@ -110,8 +104,8 @@ const postLocation = async ctx => {
 		ctx.status = 201;
 		ctx.body = response;
 	} catch (e) {
-		console.error(e);
+		ctx.status = 500;
 	}
 };
 
-module.exports = { addOrUpdate, getVehicle, deleteVehicle, getFleet, postLocation };
+module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, postLocation, addVehicle };
