@@ -37,7 +37,9 @@ const addOrUpdate = ctx => {
 				vType: ctx.request.body.type,
 				make: ctx.request.body.make,
 				year: ctx.request.body.year,
-				mac_address: ctx.request.body.mac_address
+				mac_address: ctx.request.body.mac_address,
+				total_driving_time: 0,
+				total_miles_driven: 0
 			}
 		);
 		ctx.company.save(err => {
@@ -50,7 +52,9 @@ const addOrUpdate = ctx => {
 			type: ctx.request.body.type,
 			make: ctx.request.body.make,
 			year: ctx.request.body.year,
-			mac_address: ctx.request.body.mac_address
+			mac_address: ctx.request.body.mac_address,
+			total_driving_time: 0,
+			total_miles_driven: 0
 		};
 
 	}
@@ -62,7 +66,7 @@ const getVehicle = ctx => {
   const vehicle = ctx.company.fleet.filter(vehicle => vehicle.license_number === ctx.params.license_number);
   if (vehicle.length) {
     ctx.status = 200;
-    ctx.body = vehicle;
+    ctx.body = vehicle[0];
   } else {
     ctx.status = 404;
     ctx.body = 'Vehicle not found'
