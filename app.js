@@ -4,11 +4,18 @@ require('dotenv').config();
 
 const Koa = require('koa');
 const app = new Koa();
+const http = require('http');
+const SocketIO = require('socket.io');
+
+
 
 const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const cors = require('kcors');
 const jwt = require('jsonwebtoken');
+const server = http.createServer(app.callback());
+const io = SocketIO(server);
+
 
 const config = require('./config');
 const router = require('./router');
@@ -20,6 +27,16 @@ require('./db');
 /**
  * Middleware
  */
+
+io.on('connection',(client) => {
+  client.on('subscribeToTimer', (interval) => {
+    console.log('client');
+    setInterval(() => {
+      client.emit('timer', new Date());
+    }, interval);
+  });
+});
+
 app.use(cors());
 app.use(logger());
 app.use(bodyParser());
@@ -45,8 +62,9 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 
-app.listen(config.port).on('error', err => {
+server.listen(config.port).on('error', err => {
   console.error(err);
 });
+
 
 console.log(`Server now listening on: ${config.port}`)
