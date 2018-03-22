@@ -6,7 +6,7 @@ const addOrUpdate = ctx => {
 	if (!(ctx.request.body.model &&
 					ctx.params.license_number &&
 					ctx.request.body.mac_address &&
-					ctx.request.body.type &&
+					ctx.request.body.vtype &&
 					ctx.request.body.year &&
 					ctx.request.body.make)) {
 		ctx.status = 400;
@@ -21,7 +21,7 @@ const addOrUpdate = ctx => {
 
 		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicle[0]._id }, {
 		'fleet.$.mac_address': ctx.request.body.mac_address, 'fleet.$.model': ctx.request.body.model,
-		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.type, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
+		'fleet.$.license_number': ctx.params.license_number, 'fleet.$.vType': ctx.request.body.vtype, 'fleet.$.make': ctx.request.body.make, 'fleet.$.year': ctx.request.body.year }, (err, vehicleDocument) => {
 			if (err) throw Error;
 		});
 		ctx.status = 204;
@@ -34,7 +34,7 @@ const addOrUpdate = ctx => {
 			{
 				model: ctx.request.body.model,
 				license_number: ctx.params.license_number,
-				vType: ctx.request.body.type,
+				vType: ctx.request.body.vtype,
 				make: ctx.request.body.make,
 				year: ctx.request.body.year,
 				mac_address: ctx.request.body.mac_address,
@@ -49,7 +49,7 @@ const addOrUpdate = ctx => {
 		ctx.body = {
 			license_number: ctx.params.license_number,
 			model: ctx.request.body.model,
-			type: ctx.request.body.type,
+			vtype: ctx.request.body.vtype,
 			make: ctx.request.body.make,
 			year: ctx.request.body.year,
 			mac_address: ctx.request.body.mac_address,
