@@ -4,6 +4,8 @@
   "description": "Server for streetfleet",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,6 +18,9 @@
     "url": "https://github.com/nikwib/streetfleet-backend/issues"
   },
   "homepage": "https://github.com/nikwib/streetfleet-backend#readme",
+  "engines": {
+    "node": "9.9.0"
+  },
   "dependencies": {
     "atob": "^2.0.3",
     "bcrypt": "^1.0.3",
