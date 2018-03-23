@@ -40,7 +40,9 @@ exports.signUp = async ctx => {
       };
       ctx.status = 201;
     } catch (e) {
+      console.error(e);
       ctx.status = 500;
+      ctx.body = error.response;
     }
   }
 };
