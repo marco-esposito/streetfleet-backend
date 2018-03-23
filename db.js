@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/streetfleet');
+// mongoose.connect('mongodb://localhost/streetfleet');
+mongoose.connect(process.env.MONGODB_URL);
 
 const db = mongoose.connection;
 
