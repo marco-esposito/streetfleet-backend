@@ -22,13 +22,14 @@ router
   // .get('/testauthorize', authorize, test.authorize)
 
   .get('/fleet', authorize, vehicle.getFleet)
-  .put('/fleet/vehicle/:license_number', authorize, vehicle.addOrUpdate)
-  .get('/fleet/vehicle/:license_number', authorize, vehicle.getVehicle)
-  .delete('/fleet/vehicle/:license_number', authorize, vehicle.deleteVehicle)
+  .post('/vehicle', authorize, vehicle.addVehicle)
+  .get('/vehicle/:vehicle_id', authorize, vehicle.getVehicle)
+  .put('/vehicle/:vehicle_id', authorize, vehicle.updateVehicle)
+  .delete('/vehicle/:vehicle_id', authorize, vehicle.deleteVehicle)
 
   //NOTE: vehicle.getTripLogs will have to be faked for MVP
   // .get('/fleet/vehicle/trips/:license_number', authorize, vehicle.getTripLogs)
-  .post('/fleet/vehicle/location', vehicle.postLocation)
+  .post('/vehicle/location', vehicle.postLocation)
 
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)
