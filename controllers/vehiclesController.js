@@ -16,11 +16,24 @@ const updateVehicle = ctx => {
 	});
 	if (matchingVehicles.length > 0) {
 
-		Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicles[0]._id }, {
-		'fleet.$.mac_address': userData.mac_address, 'fleet.$.model': userData.model,
-		'fleet.$.license_number': userData.license_number, 'fleet.$.vType': userData.vType, 'fleet.$.make': userData.make, 'fleet.$.year': userData.year }, (err, vehicleDocument) => {
-			if (err) throw Error;
-		});
+    //METHOD WITH findOneAndUpdate:
+		// Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicles[0]._id }, {
+		// 'fleet.$.mac_address': userData.mac_address, 'fleet.$.model': userData.model,
+		// 'fleet.$.license_number': userData.license_number, 'fleet.$.vType': userData.vType, 'fleet.$.make': userData.make, 'fleet.$.year': userData.year }, (err, vehicleDocument) => {
+		// 	if (err) throw Error;
+		// });
+
+		//METHOD WITH MODEL.SAVE():
+		const updatedVehicle = {
+			mac_address: userData.mac_address,
+			model: userData.model,
+			license_number: userData.license_number,
+			vType: userData.vType,
+			make: userData.make,
+			year: userData.year
+		}
+		for (let key in updatedVehicle) matchingVehicles[0][key] = updatedVehicle[key];
+		ctx.company.save();
 		ctx.status = 204;
 	}	else {
     ctx.status = 404;
@@ -104,8 +117,10 @@ const postLocation = async ctx => {
 		const response = await Location.create(location);
 		ctx.status = 201;
 		ctx.body = response;
-	} catch (e) {
+	} catch (error) {
+		console.error(error);
 		ctx.status = 500;
+		ctx.body = error.response;
 	}
 };
 
