@@ -14,10 +14,18 @@ exports.signUp = async ctx => {
 
   if (user) {
     ctx.status = 400;
-    ctx.body = 'Username already exist!';
+    ctx.body = {
+      errors: [
+        'Username already exist!'
+      ]
+    };
   } else if (incompleteBody) {
     ctx.status = 400;
-    ctx.body = 'Incomplete body';
+    ctx.body = {
+      errors: [
+        'Incomplete body'
+      ]
+    };
   } else {
     const saltRounds = 10;
     const plaintextPsw = userData.password;
