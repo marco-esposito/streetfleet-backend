@@ -106,6 +106,11 @@ const deleteVehicle = ctx => {
 			if (err) return next(err)
 		});
     ctx.status = 204;
+		ctx.body = {
+			errors: [
+				'The vehicle has been deleted'
+			]
+		}
   } else {
     ctx.status = 404;
     ctx.body = {
