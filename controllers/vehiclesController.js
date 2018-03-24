@@ -107,9 +107,7 @@ const deleteVehicle = ctx => {
 		});
     ctx.status = 204;
 		ctx.body = {
-			errors: [
-				'The vehicle has been deleted'
-			]
+			message: 'The vehicle has been deleted'
 		}
   } else {
     ctx.status = 404;
