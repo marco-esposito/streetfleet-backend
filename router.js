@@ -32,8 +32,10 @@ router
   .delete('/vehicle/:vehicle_id', authorize, vehicle.deleteVehicle)
 
   //NOTE: vehicle.getTripLogs will have to be faked for MVP
-  // .get('/trips/:mac_address', authorize, vehicle.getTripLogs)
-  .post('/vehicle/location', vehicle.postLocation)
+  .get('/trips/:mac_address', authorize, vehicle.getTripLogs)
+
+  //postLocation has been replaced by Streetfleet MQ
+  // .post('/vehicle/location', vehicle.postLocation)
 
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)

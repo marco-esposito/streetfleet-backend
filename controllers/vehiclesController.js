@@ -1,6 +1,7 @@
 'use strict';
 const Company = require('../models/company');
-const Location = require('../models/location');
+// const Location = require('../models/location');
+const Trip = require('../models/trip');
 
 const updateVehicle = ctx => {
 	const userData = ctx.request.body;
@@ -124,32 +125,44 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-const postLocation = async ctx => {
-	const userData = ctx.request.body;
-	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
-		ctx.status = 400;
-		ctx.body = {
-			errors: [
-				'Incomplete body'
-			]
-		};
-		return;
-	}
-	const location = {
-		mac_address: userData.mac_address,
-		time: userData.time,
-		latitude: userData.latitude,
-		longitude: userData.longitude
-	}
+// const postLocation = async ctx => {
+// 	const userData = ctx.request.body;
+// 	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
+// 		ctx.status = 400;
+// 		ctx.body = {
+// 			errors: [
+// 				'Incomplete body'
+// 			]
+// 		};
+// 		return;
+// 	}
+// 	const location = {
+// 		mac_address: userData.mac_address,
+// 		time: userData.time,
+// 		latitude: userData.latitude,
+// 		longitude: userData.longitude
+// 	}
+// 	try {
+// 		const response = await Location.create(location);
+// 		ctx.status = 201;
+// 		ctx.body = response;
+// 	} catch (error) {
+// 		console.error(error);
+// 		ctx.status = 500;
+// 		ctx.body = error.response;
+// 	}
+// };
+
+const getTripLogs = async ctx => {
 	try {
-		const response = await Location.create(location);
-		ctx.status = 201;
+		const response = await Trip.find({mac_address: ctx.params.mac_address});
+		ctx.status = 200;
 		ctx.body = response;
 	} catch (error) {
 		console.error(error);
 		ctx.status = 500;
 		ctx.body = error.response;
-	}
-};
+	};
+}
 
-module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, postLocation, addVehicle };
+module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, /*postLocation,*/ addVehicle, getTripLogs };

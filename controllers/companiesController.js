@@ -47,8 +47,8 @@ exports.signUp = async ctx => {
         email: response.email
       };
       ctx.status = 201;
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       ctx.status = 500;
       ctx.body = error.response;
     }
