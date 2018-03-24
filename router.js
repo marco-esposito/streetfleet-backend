@@ -11,7 +11,11 @@ const router = new Router({
 const authorize = async (ctx, next) => {
   if (!ctx.company) {
     ctx.status = 401;
-    ctx.body = 'Unauthorized';
+    ctx.body = {
+      errors: [
+        'Unauthorized'
+      ]
+    };
     return;
   }
   await next();
@@ -28,7 +32,7 @@ router
   .delete('/vehicle/:vehicle_id', authorize, vehicle.deleteVehicle)
 
   //NOTE: vehicle.getTripLogs will have to be faked for MVP
-  // .get('/fleet/vehicle/trips/:license_number', authorize, vehicle.getTripLogs)
+  // .get('/trips/:mac_address', authorize, vehicle.getTripLogs)
   .post('/vehicle/location', vehicle.postLocation)
 
   .post('/company/sign-up', company.signUp)
@@ -36,7 +40,11 @@ router
 
 
   .get('/*', ctx => {
-    ctx.body = `The route doesn't exist`;
+    ctx.body = {
+      errors:[
+        `The route doesn't exist`
+      ]
+    };
     ctx.status = 404;
   });
 
