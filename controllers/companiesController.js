@@ -47,10 +47,10 @@ exports.signUp = async ctx => {
         email: response.email
       };
       ctx.status = 201;
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
       ctx.status = 500;
-      ctx.body = error.response;
+      ctx.body = e.message;
     }
   }
 };
@@ -84,5 +84,4 @@ exports.signIn = async ctx => {
     ctx.status = 404;
     ctx.body = 'Username not found';
   }
-
 };

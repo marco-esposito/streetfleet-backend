@@ -1,6 +1,5 @@
 'use strict';
 const vehicle = require('./controllers/vehiclesController');
-const test = require('./controllers/testController');
 const company = require('./controllers/companiesController');
 
 const Router = require('koa-router');
@@ -22,16 +21,11 @@ const authorize = async (ctx, next) => {
 };
 
 router
-  // .get('/testroute', test.testAdd)
-  // .get('/testauthorize', authorize, test.authorize)
-
   .get('/fleet', authorize, vehicle.getFleet)
   .post('/vehicle', authorize, vehicle.addVehicle)
   .get('/vehicle/:vehicle_id', authorize, vehicle.getVehicle)
   .put('/vehicle/:vehicle_id', authorize, vehicle.updateVehicle)
   .delete('/vehicle/:vehicle_id', authorize, vehicle.deleteVehicle)
-
-  //NOTE: vehicle.getTripLogs will have to be faked for MVP
   .get('/trips/:mac_address', authorize, vehicle.getTripLogs)
 
   //postLocation has been replaced by Streetfleet MQ
