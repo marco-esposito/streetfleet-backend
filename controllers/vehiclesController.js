@@ -35,9 +35,18 @@ const updateVehicle = ctx => {
 		for (let key in updatedVehicle) matchingVehicles[0][key] = updatedVehicle[key];
 		ctx.company.save();
 		ctx.status = 204;
+		ctx.body = {
+			errors: [
+				'The vehicle has been deleted'
+			]
+		}
 	}	else {
     ctx.status = 404;
-		ctx.body = 'Vehicle not found';
+		ctx.body = {
+			errors: [
+				'Vehicle not found'
+			]
+		};
 	}
 };
 
@@ -46,7 +55,11 @@ const addVehicle = async ctx => {
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
 		ctx.status = 400;
-		ctx.body ='Incomplete request';
+		ctx.body = {
+			errors: [
+				'Incomplete request'
+			]
+		};
 		return;
 	}
 
@@ -77,8 +90,12 @@ const getVehicle = ctx => {
     ctx.body = vehicles[0];
   } else {
     ctx.status = 404;
-    ctx.body = 'Vehicle not found'
-  }
+    ctx.body = {
+			errors: [
+				'Vehicle not found'
+			]
+		};
+  };
 };
 
 const deleteVehicle = ctx => {
@@ -91,8 +108,12 @@ const deleteVehicle = ctx => {
     ctx.status = 204;
   } else {
     ctx.status = 404;
-    ctx.body = 'Vehicle not found'
-  }
+    ctx.body = {
+			errors: [
+				'Vehicle not found'
+			]
+		};
+  };
 };
 
 const getFleet = ctx => {
@@ -104,7 +125,11 @@ const postLocation = async ctx => {
 	const userData = ctx.request.body;
 	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
 		ctx.status = 400;
-		ctx.body = 'Incomplete body';
+		ctx.body = {
+			errors: [
+				'Incomplete body'
+			]
+		};
 		return;
 	}
 	const location = {
