@@ -1,13 +1,18 @@
 'use strict';
 const Company = require('../models/company');
-const Location = require('../models/location');
+// const Location = require('../models/location');
+const Trip = require('../models/trip');
 
-const updateVehicle = ctx => {
+const updateVehicle = async ctx => {
 	const userData = ctx.request.body;
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
 		ctx.status = 400;
-		ctx.body ='Incomplete request';
+		ctx.body = {
+			errors: [
+				'Incomplete body'
+			]
+		};
 		return;
 	}
 
@@ -33,12 +38,16 @@ const updateVehicle = ctx => {
 			year: userData.year
 		}
 		for (let key in updatedVehicle) matchingVehicles[0][key] = updatedVehicle[key];
-		ctx.company.save();
-		ctx.status = 204;
-		ctx.body = {
-			errors: [
-				'The vehicle has been deleted'
-			]
+		try {
+			await ctx.company.save();
+			ctx.status = 204;
+			ctx.body = {
+				message: 'The vehicle has been updated'
+			};
+		} catch (e) {
+			console.error(e);
+			ctx.status = 500;
+			ctx.body = e.message;
 		}
 	}	else {
     ctx.status = 404;
@@ -57,7 +66,7 @@ const addVehicle = async ctx => {
 		ctx.status = 400;
 		ctx.body = {
 			errors: [
-				'Incomplete request'
+				'Incomplete body'
 			]
 		};
 		return;
@@ -75,11 +84,15 @@ const addVehicle = async ctx => {
 			total_miles_driven: 0
 		}
 	);
-	await ctx.company.save((err, res) => {
-		if (err) return next(err);
-	});
-	ctx.status = 201;
-	ctx.body = ctx.company.fleet[ctx.company.fleet.length-1];
+	try {
+		await ctx.company.save();
+		ctx.status = 201;
+		ctx.body = ctx.company.fleet[ctx.company.fleet.length-1];
+	} catch (e) {
+		console.error(e);
+		ctx.status = 500;
+		ctx.body = e.message;
+	}
 }
 
 const getVehicle = ctx => {
@@ -98,14 +111,18 @@ const getVehicle = ctx => {
   };
 };
 
-const deleteVehicle = ctx => {
+const deleteVehicle = async ctx => {
   const removeIndex = ctx.company.fleet.map(vehicle => vehicle._id.toString()).indexOf(ctx.params.vehicle_id);
   if (removeIndex !== -1) {
     ctx.company.fleet.splice(removeIndex, 1);
-    ctx.company.save(err => {
-			if (err) return next(err)
-		});
-    ctx.status = 204;
+		try {
+			await ctx.company.save();
+		} catch (e) {
+			console.error(e);
+			ctx.status = 500;
+			ctx.body = e.message;
+		};
+		ctx.status = 204;
 		ctx.body = {
 			message: 'The vehicle has been deleted'
 		};
@@ -124,32 +141,44 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-const postLocation = async ctx => {
-	const userData = ctx.request.body;
-	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
-		ctx.status = 400;
-		ctx.body = {
-			errors: [
-				'Incomplete body'
-			]
-		};
-		return;
-	}
-	const location = {
-		mac_address: userData.mac_address,
-		time: userData.time,
-		latitude: userData.latitude,
-		longitude: userData.longitude
-	}
-	try {
-		const response = await Location.create(location);
-		ctx.status = 201;
-		ctx.body = response;
-	} catch (error) {
-		console.error(error);
-		ctx.status = 500;
-		ctx.body = error.response;
-	}
-};
+// const postLocation = async ctx => {
+// 	const userData = ctx.request.body;
+// 	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
+// 		ctx.status = 400;
+// 		ctx.body = {
+// 			errors: [
+// 				'Incomplete body'
+// 			]
+// 		};
+// 		return;
+// 	}
+// 	const location = {
+// 		mac_address: userData.mac_address,
+// 		time: userData.time,
+// 		latitude: userData.latitude,
+// 		longitude: userData.longitude
+// 	}
+// 	try {
+// 		const response = await Location.create(location);
+// 		ctx.status = 201;
+// 		ctx.body = response;
+// 	} catch (error) {
+// 		console.error(error);
+// 		ctx.status = 500;
+// 		ctx.body = error.response;
+// 	}
+// };
 
-module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, postLocation, addVehicle };
+const getTripLogs = async ctx => {
+	try {
+		const response = await Trip.find({mac_address: ctx.params.mac_address});
+		ctx.status = 200;
+		ctx.body = response;
+	} catch (e) {
+		console.error(e);
+		ctx.status = 500;
+		ctx.body = e.message;
+	};
+}
+
+module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, /*postLocation,*/ addVehicle, getTripLogs };
