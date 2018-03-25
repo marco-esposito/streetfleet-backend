@@ -8,7 +8,11 @@ const updateVehicle = async ctx => {
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
 		ctx.status = 400;
-		ctx.body ='Incomplete request';
+		ctx.body = {
+			errors: [
+				'Incomplete body'
+			]
+		};
 		return;
 	}
 
@@ -38,9 +42,7 @@ const updateVehicle = async ctx => {
 			await ctx.company.save();
 			ctx.status = 204;
 			ctx.body = {
-				errors: [
-					'The vehicle has been updated'
-				]
+				message: 'The vehicle has been updated'
 			};
 		} catch (e) {
 			console.error(e);
@@ -64,7 +66,7 @@ const addVehicle = async ctx => {
 		ctx.status = 400;
 		ctx.body = {
 			errors: [
-				'Incomplete request'
+				'Incomplete body'
 			]
 		};
 		return;
@@ -115,14 +117,14 @@ const deleteVehicle = async ctx => {
     ctx.company.fleet.splice(removeIndex, 1);
 		try {
 			await ctx.company.save();
-			ctx.status = 204;
-			ctx.body = {
-				message: 'The vehicle has been deleted'
-			};
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
 			ctx.body = e.message;
+		};
+		ctx.status = 204;
+		ctx.body = {
+			message: 'The vehicle has been deleted'
 		};
   } else {
     ctx.status = 404;

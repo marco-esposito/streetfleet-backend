@@ -58,7 +58,11 @@ exports.signUp = async ctx => {
 exports.signIn = async ctx => {
   if (!ctx.headers['authorization']) {
     ctx.status = 400;
-    ctx.body = 'Basic authorization in header is missing';
+    ctx.body = {
+			errors: [
+				'Basic authorization in header is missing'
+			]
+		};
     return;
   }
   const b64 = atob(ctx.headers['authorization'].split(' ').pop());
@@ -78,10 +82,18 @@ exports.signIn = async ctx => {
       }
     } else {
       ctx.status = 401;
-      ctx.body = 'Unauthorized';
+      ctx.body = {
+  			errors: [
+  				'Unauthorized'
+  			]
+  		};;
     }
   } else {
     ctx.status = 404;
-    ctx.body = 'Username not found';
+    ctx.body = {
+			errors: [
+				'Username not found'
+			]
+		};;
   }
 };
