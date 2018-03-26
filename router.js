@@ -26,10 +26,8 @@ router
   .get('/vehicle/:vehicle_id', authorize, vehicle.getVehicle)
   .put('/vehicle/:vehicle_id', authorize, vehicle.updateVehicle)
   .delete('/vehicle/:vehicle_id', authorize, vehicle.deleteVehicle)
+  .post('/vehicle/location', vehicle.postLocation)
   .get('/trips/:mac_address', authorize, vehicle.getTripLogs)
-
-  //postLocation has been replaced by Streetfleet MQ
-  // .post('/vehicle/location', vehicle.postLocation)
 
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)

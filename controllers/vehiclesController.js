@@ -1,4 +1,6 @@
 'use strict';
+const fetch = require('node-fetch');
+
 const Company = require('../models/company');
 // const Location = require('../models/location');
 const Trip = require('../models/trip');
@@ -47,7 +49,9 @@ const updateVehicle = async ctx => {
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
-			ctx.body = e.message;
+			ctx.body = {
+				message: e.message
+			};
 		}
 	}	else {
     ctx.status = 404;
@@ -91,7 +95,9 @@ const addVehicle = async ctx => {
 	} catch (e) {
 		console.error(e);
 		ctx.status = 500;
-		ctx.body = e.message;
+		ctx.body = {
+			message: e.message
+		};
 	}
 }
 
@@ -120,12 +126,11 @@ const deleteVehicle = async ctx => {
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
-			ctx.body = e.message;
+			ctx.body = {
+				message: e.message
+			};
 		};
 		ctx.status = 204;
-		ctx.body = {
-			message: 'The vehicle has been deleted'
-		};
   } else {
     ctx.status = 404;
     ctx.body = {
@@ -141,33 +146,42 @@ const getFleet = ctx => {
   ctx.body = ctx.company.fleet;
 };
 
-// const postLocation = async ctx => {
-// 	const userData = ctx.request.body;
-// 	if (!userData.mac_address || !userData.time || !userData.latitude || !userData.longitude) {
-// 		ctx.status = 400;
-// 		ctx.body = {
-// 			errors: [
-// 				'Incomplete body'
-// 			]
-// 		};
-// 		return;
-// 	}
-// 	const location = {
-// 		mac_address: userData.mac_address,
-// 		time: userData.time,
-// 		latitude: userData.latitude,
-// 		longitude: userData.longitude
-// 	}
-// 	try {
-// 		const response = await Location.create(location);
-// 		ctx.status = 201;
-// 		ctx.body = response;
-// 	} catch (error) {
-// 		console.error(error);
-// 		ctx.status = 500;
-// 		ctx.body = error.response;
-// 	}
-// };
+const postLocation = async ctx => {
+	const userData = ctx.request.body;
+	const incompleteBody = !(userData.mac_address && userData.time && userData.latitude && userData.longitude);
+	if (incompleteBody) {
+		ctx.status = 400;
+		ctx.body = {
+			errors: [
+				'Incomplete body'
+			]
+		};
+		return;
+	}
+
+	try {
+		const response = await fetch(process.env.STREETFLEET_MQ_URL, {
+			headers: {
+				'content-type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify(ctx.request.body)
+		});
+		ctx.status = 201;
+		ctx.body = {
+			message: 'Created'
+		}
+
+	} catch (e) {
+		console.error(e);
+		ctx.status = 500;
+		ctx.body = {
+			errors: [
+				'Something was wrong on the StreetFleetMQ'
+			]
+		}
+	}
+}
 
 const getTripLogs = async ctx => {
 	try {
@@ -181,4 +195,4 @@ const getTripLogs = async ctx => {
 	};
 }
 
-module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, /*postLocation,*/ addVehicle, getTripLogs };
+module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, postLocation, addVehicle, getTripLogs };
