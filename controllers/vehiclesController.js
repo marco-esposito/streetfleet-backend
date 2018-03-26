@@ -1,4 +1,6 @@
 'use strict';
+const fetch = require('node-fetch');
+
 const Company = require('../models/company');
 // const Location = require('../models/location');
 const Trip = require('../models/trip');
@@ -169,6 +171,31 @@ const getFleet = ctx => {
 // 	}
 // };
 
+const postLocation = async ctx => {
+	try {
+		const response = await fetch(process.env.STREETFLEET_MQ_URL, {
+			headers: {
+				'content-type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify(ctx.request.body)
+		});
+		ctx.status = 201;
+		ctx.body = {
+			message: 'Created'
+		}
+	} catch (e) {
+		console.error(e);
+		ctx.status = 500;
+		ctx.body = {
+			errors: [
+				'Something was wrong on the StreetFleetMQ'
+			]
+		}
+	}
+
+}
+
 const getTripLogs = async ctx => {
 	try {
 		const response = await Trip.find({mac_address: ctx.params.mac_address});
@@ -181,4 +208,4 @@ const getTripLogs = async ctx => {
 	};
 }
 
-module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, /*postLocation,*/ addVehicle, getTripLogs };
+module.exports = { updateVehicle, getVehicle, deleteVehicle, getFleet, postLocation, addVehicle, getTripLogs };
