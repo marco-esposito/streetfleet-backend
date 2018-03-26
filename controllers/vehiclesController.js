@@ -144,16 +144,17 @@ const getFleet = ctx => {
 };
 
 const postLocation = async ctx => {
-		const userData = ctx.request.body;
-		if !(userData.mac_address && userData.time && userData.latitude && userData.longitude) {
-			ctx.status = 400;
-			ctx.body = {
-				errors: [
-					'Incomplete body'
-				]
-			};
-			return;
-		}
+	const userData = ctx.request.body;
+	const incompleteBody = !(userData.mac_address && userData.time && userData.latitude && userData.longitude);
+	if (incompleteBody) {
+		ctx.status = 400;
+		ctx.body = {
+			errors: [
+				'Incomplete body'
+			]
+		};
+		return;
+	}
 
 	try {
 		const response = await fetch(process.env.STREETFLEET_MQ_URL, {
@@ -167,7 +168,7 @@ const postLocation = async ctx => {
 		ctx.body = {
 			message: 'Created'
 		}
-		
+
 	} catch (e) {
 		console.error(e);
 		ctx.status = 500;
@@ -177,7 +178,6 @@ const postLocation = async ctx => {
 			]
 		}
 	}
-
 }
 
 const getTripLogs = async ctx => {
