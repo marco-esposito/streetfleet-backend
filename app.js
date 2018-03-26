@@ -24,6 +24,7 @@ app.use(cors());
 app.use(logger());
 app.use(bodyParser());
 
+//handling errors ultimately
 app.use(async (ctx, next) => {
   try {
     await next();

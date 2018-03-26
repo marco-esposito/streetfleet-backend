@@ -50,7 +50,9 @@ exports.signUp = async ctx => {
     } catch (e) {
       console.error(e);
       ctx.status = 500;
-      ctx.body = e.message;
+      ctx.body = {
+        message: e.message
+      };
     }
   }
 };

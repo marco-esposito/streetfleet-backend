@@ -49,7 +49,9 @@ const updateVehicle = async ctx => {
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
-			ctx.body = e.message;
+			ctx.body = {
+				message: e.message
+			};
 		}
 	}	else {
     ctx.status = 404;
@@ -93,7 +95,9 @@ const addVehicle = async ctx => {
 	} catch (e) {
 		console.error(e);
 		ctx.status = 500;
-		ctx.body = e.message;
+		ctx.body = {
+			message: e.message
+		};
 	}
 }
 
@@ -122,12 +126,11 @@ const deleteVehicle = async ctx => {
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
-			ctx.body = e.message;
+			ctx.body = {
+				message: e.message
+			};
 		};
 		ctx.status = 204;
-		ctx.body = {
-			message: 'The vehicle has been deleted'
-		};
   } else {
     ctx.status = 404;
     ctx.body = {
