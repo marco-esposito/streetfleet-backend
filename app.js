@@ -27,14 +27,20 @@ require('./db');
 /**
  * Middleware
  */
-
+let lat = 30.34534534;
+let long = 2.175017;
+setInterval(function(){
+  lat = lat + 0.001
+  long = long + 0.001
+},1000);
 io.on('connection',(client) => {
   client.on('subscribeToTimer', (interval) => {
     console.log('client');
     setInterval(() => {
-      client.emit('timer', 'hello');
+      client.emit('timer', {lat,long});
     }, interval);
   });
+  io.socket.emit('mobile',client);
 });
 
 app.use(cors());
