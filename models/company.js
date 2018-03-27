@@ -17,7 +17,7 @@ const CompanySchema = new Schema({
 			license_number: String,
 			mac_address: String,
 			total_driving_time: Number,
-			total_miles_driven: Number,
+			total_km_driven: Number,
 		}
 	]
 });
