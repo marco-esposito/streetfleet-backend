@@ -85,7 +85,7 @@ const addVehicle = async ctx => {
 			year: userData.year,
 			mac_address: userData.mac_address,
 			total_driving_time: 0,
-			total_miles_driven: 0
+			total_km_driven: 0
 		}
 	);
 	try {
