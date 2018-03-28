@@ -8,7 +8,6 @@ const http = require('http');
 const SocketIO = require('socket.io');
 
 
-
 const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const cors = require('kcors');
@@ -28,11 +27,13 @@ require('./db');
  * Middleware
  */
 
-let clients;
+// let clients;
 
-io.on('connection',(client) => {
-  clients = client;
-});
+// io.on('connection', (client) => {
+//   //console.log(client);
+
+//   clients = client;
+// });
 
 app.use(cors());
 app.use(logger());
@@ -48,15 +49,18 @@ app.use(async (ctx, next) => {
   } catch (e) {
     return await next();
   }
-  ctx.company = await Company.findOne({username: decoded.username});
+  ctx.company = await Company.findOne({ username: decoded.username });
   await next();
 });
 
-app.use(async (ctx,next) => {
-  clients.on('subscribeToTimer', () => {
-    console.log('client');
-      clients.emit('timer', {lat:ctx.request.body.latitude,long:ctx.request.body.longitude});
-    });
+app.use(async (ctx, next) => { 
+  io.on('connection', (clients) => {
+//    console.log('kimi',clients);
+    console.log('a user connected');
+
+    
+    clients.on('fleet_id', () => { clients.emit('position', { lat: ctx.request.body.latitude, long: ctx.request.body.longitude }); });
+  });
   await next();
 })
 
