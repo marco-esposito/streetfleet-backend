@@ -47,16 +47,18 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
   if (!token || token.split(' ')[0] === 'Basic') return await next();
+  console.log('were here~~=========================');
 
   token = token.split(' ').pop();
   let decoded;
   try {
     decoded = jwt.verify(token, "$secretword");
   } catch (e) {
-    return await next();
+      return await next();
   }
   ctx.company = await Company.findOne({username: decoded.username});
-  await next();
+  // console.log('ctx.company: ', ctx.company);
+  await next(ctx);
 });
 
 /**

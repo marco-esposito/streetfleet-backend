@@ -43,9 +43,6 @@ const updateVehicle = async ctx => {
 		try {
 			await ctx.company.save();
 			ctx.status = 204;
-			ctx.body = {
-				message: 'The vehicle has been updated'
-			};
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
