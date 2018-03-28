@@ -27,20 +27,11 @@ require('./db');
 /**
  * Middleware
  */
-let lat = 30.34534534;
-let long = 2.175017;
-setInterval(function(){
-  lat = lat + 0.001
-  long = long + 0.001
-},1000);
+
+let clients;
 
 io.on('connection',(client) => {
-  client.on('subscribeToTimer', (interval) => {
-    console.log('client');
-  //   setInterval(() => {
-  //     client.emit('timer', {lat,long});
-  //   }, interval);
-  });
+  clients = client;
 });
 
 app.use(cors());
@@ -62,9 +53,10 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx,next) => {
-  console.log(ctx.request.body);
-  console.log('working');
-  io.in('client').emit('timer', {lat:ctx.request.body.latitude,long:ctx.request.body.longtitude});
+  clients.on('subscribeToTimer', () => {
+    console.log('client');
+      clients.emit('timer', {lat:ctx.request.body.latitude,long:ctx.request.body.longitude});
+    });
   await next();
 })
 
