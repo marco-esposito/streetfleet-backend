@@ -148,6 +148,7 @@ const getFleet = ctx => {
 
 const postLocation = async ctx => {
 	const userData = ctx.request.body;
+	console.log(userData);
 	const incompleteBody = !(userData.mac_address && userData.time && userData.latitude && userData.longitude);
 	if (incompleteBody) {
 		ctx.status = 400;

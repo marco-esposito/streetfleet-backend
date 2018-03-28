@@ -4,11 +4,18 @@ require('dotenv').config();
 
 const Koa = require('koa');
 const app = new Koa();
+const http = require('http');
+const SocketIO = require('socket.io');
+
+
 
 const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const cors = require('kcors');
 const jwt = require('jsonwebtoken');
+const server = http.createServer(app.callback());
+const io = SocketIO(server);
+
 
 const config = require('./config');
 const router = require('./router');
@@ -20,34 +27,29 @@ require('./db');
 /**
  * Middleware
  */
+let lat = 30.34534534;
+let long = 2.175017;
+setInterval(function(){
+  lat = lat + 0.001
+  long = long + 0.001
+},1000);
+
+io.on('connection',(client) => {
+  client.on('subscribeToTimer', (interval) => {
+    console.log('client');
+  //   setInterval(() => {
+  //     client.emit('timer', {lat,long});
+  //   }, interval);
+  });
+});
+
 app.use(cors());
 app.use(logger());
 app.use(bodyParser());
 
-//handling errors ultimately
-app.use(async (ctx, next) => {
-  try {
-    await next();
-  } catch (err) {
-    ctx.body = undefined;
-    switch (ctx.status) {
-    case 401:
-      ctx.app.emit('error', err, this);
-      break;
-    default:
-      if (err.message) {
-        ctx.body = {errors:[err.message]};
-      }
-      ctx.app.emit('error', err, this);
-    }
-  }
-});
-
-//middleware for authentication
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
   if (!token || token.split(' ')[0] === 'Basic') return await next();
-
   token = token.split(' ').pop();
   let decoded;
   try {
@@ -59,6 +61,13 @@ app.use(async (ctx, next) => {
   await next();
 });
 
+app.use(async (ctx,next) => {
+  console.log(ctx.request.body);
+  console.log('working');
+  io.in('client').emit('timer', {lat:ctx.request.body.latitude,long:ctx.request.body.longtitude});
+  await next();
+})
+
 /**
  * Routes
  */
@@ -66,8 +75,9 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 
-app.listen(config.port).on('error', err => {
+server.listen(config.port).on('error', err => {
   console.error(err);
 });
+
 
 console.log(`Server now listening on: ${config.port}`)
