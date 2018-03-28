@@ -31,7 +31,8 @@ router
 
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)
-  .put('/company/:username', company.updateCompany)
+
+  .put('/company/:username', authorize, company.updateCompany)
 
 
   .get('/*', ctx => {

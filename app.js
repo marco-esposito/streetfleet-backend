@@ -44,10 +44,10 @@ app.use(async (ctx, next) => {
 });
 
 //middleware for authentication
+// From this middleware on, ctx is appended with company (the company information). That is available to all the routes now.
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
   if (!token || token.split(' ')[0] === 'Basic') return await next();
-  console.log('were here~~=========================');
 
   token = token.split(' ').pop();
   let decoded;
