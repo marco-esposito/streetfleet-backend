@@ -167,6 +167,7 @@ const postLocation = async ctx => {
 			method: 'POST',
 			body: JSON.stringify(ctx.request.body)
 		});
+		if (response.status === 500) throw new Error('Got 500 from streetfleetMQ');
 		ctx.status = 201;
 		ctx.body = {
 			message: 'Created'
