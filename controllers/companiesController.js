@@ -88,7 +88,7 @@ exports.signIn = async ctx => {
   			errors: [
   				'Unauthorized'
   			]
-  		};;
+  		};
     }
   } else {
     ctx.status = 404;
@@ -96,6 +96,57 @@ exports.signIn = async ctx => {
 			errors: [
 				'Username not found'
 			]
-		};;
+		};
+  }
+};
+
+
+exports.updateCompany = async ctx => {
+  const userData = ctx.request.body;
+  const incompleteBody = !userData.company_name  || !userData.email || !userData.old_password || !userData.new_password;
+  if (incompleteBody) {
+    ctx.status = 400;
+    ctx.body = {
+      errors: [
+        'Bad Request - the request could not be understood or was missing required parameters.(incomplete body)'
+      ]
+    };
+    return;
+  }
+  // ctx.company at this stage is all the company data bc queried earlier in middleware
+  const areCompatible = await bcrypt.compare(userData.old_password, ctx.company.password);
+  // must hash the password before saving it in database
+  const saltRounds = 10;
+  const plaintextPsw = userData.new_password;
+  const hashPsw = await bcrypt.hash(plaintextPsw, saltRounds);
+  if (areCompatible) {
+    const updatedVehicle = {
+			company_name: userData.company_name,
+			email: userData.email,
+			password: hashPsw,
+		}
+		for (let key in updatedVehicle) ctx.company[key] = updatedVehicle[key];
+		try {
+			await ctx.company.save();
+			ctx.status = 200;
+      ctx.body = {
+        username: ctx.company.username,
+        company_name: ctx.company.company_name,
+        email: ctx.company.email
+      }
+		} catch (e) {
+			console.error(e);
+			ctx.status = 500;
+			ctx.body = {
+				message: e.message
+			};
+		}
+  } else {
+    ctx.status = 401;
+    ctx.body = {
+      errors: [
+        'The wrong old password was entered'
+      ]
+    };
   }
 };

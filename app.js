@@ -44,6 +44,7 @@ app.use(async (ctx, next) => {
 });
 
 //middleware for authentication
+// From this middleware on, ctx is appended with company (the company information). That is available to all the routes now.
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
   if (!token || token.split(' ')[0] === 'Basic') return await next();
@@ -53,7 +54,7 @@ app.use(async (ctx, next) => {
   try {
     decoded = jwt.verify(token, "$secretword");
   } catch (e) {
-    return await next();
+      return await next();
   }
   ctx.company = await Company.findOne({username: decoded.username});
   await next();
