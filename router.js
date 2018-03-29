@@ -31,6 +31,8 @@ router
 
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)
+  .get('/company/:username', authorize, company.getCompany)
+  .delete('/company/:username', authorize, company.deleteCompany)
 
 
   .get('/*', ctx => {

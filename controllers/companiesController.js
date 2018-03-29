@@ -88,7 +88,7 @@ exports.signIn = async ctx => {
   			errors: [
   				'Unauthorized'
   			]
-  		};;
+  		};
     }
   } else {
     ctx.status = 404;
@@ -96,6 +96,26 @@ exports.signIn = async ctx => {
 			errors: [
 				'Username not found'
 			]
-		};;
+		};
   }
 };
+
+exports.getCompany = ctx => {
+  ctx.status = 200;
+  ctx.body = ctx.company;
+}
+
+exports.deleteCompany = async ctx => {
+  try {
+    const removedCompany = await Company.findeOneAndRemove({username: ctx.company.username});
+    ctx.status = 204;
+  } catch (e) {
+    console.error(e);
+    ctx.status = 500;
+    ctx.body = {
+      errors: [
+        'Something was wrong when tryinf to remove the account.'
+      ]
+    }
+  }
+}
