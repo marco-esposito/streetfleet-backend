@@ -14,16 +14,20 @@ exports.signUp = async ctx => {
 
   if (user) {
     ctx.status = 400;
+    const error_message = 'Username already exist!';
+    console.log(error_message);
     ctx.body = {
       errors: [
-        'Username already exist!'
+        error_message
       ]
     };
   } else if (incompleteBody) {
     ctx.status = 400;
+    const error_message = 'Incomplete body';
+    console.log(error_message);
     ctx.body = {
       errors: [
-        'Incomplete body'
+        error_message
       ]
     };
   } else {
@@ -60,9 +64,11 @@ exports.signUp = async ctx => {
 exports.signIn = async ctx => {
   if (!ctx.headers['authorization']) {
     ctx.status = 400;
+    const error_message = 'Basic authorization in header is missing';
+    console.log(error_message);
     ctx.body = {
 			errors: [
-				'Basic authorization in header is missing'
+				error_message
 			]
 		};
     return;
@@ -86,17 +92,21 @@ exports.signIn = async ctx => {
       }
     } else {
       ctx.status = 401;
+      const error_message = 'Unauthorized';
+      console.log(error_message);
       ctx.body = {
   			errors: [
-  				'Unauthorized'
+  				error_message
   			]
   		};
     }
   } else {
     ctx.status = 404;
+    const error_message = 'Username not found';
+    console.log(error_message);
     ctx.body = {
 			errors: [
-				'Username not found'
+				error_message
 			]
 		};
   }
@@ -107,9 +117,11 @@ exports.updateCompany = async ctx => {
   const incompleteBody = !userData.company_name  || !userData.email || !userData.old_password || !userData.new_password;
   if (incompleteBody) {
     ctx.status = 400;
+    const error_message = 'Bad Request - the request could not be understood or was missing required parameters.(incomplete body)';
+    console.log(error_message);
     ctx.body = {
       errors: [
-        'Bad Request - the request could not be understood or was missing required parameters.(incomplete body)'
+        error_message
       ]
     };
     return;
@@ -144,9 +156,10 @@ exports.updateCompany = async ctx => {
 		}
   } else {
     ctx.status = 401;
+    const error_message = 'The wrong old password was entered';
     ctx.body = {
       errors: [
-        'The wrong old password was entered'
+        error_message
       ]
     };
   }
