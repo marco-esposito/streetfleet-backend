@@ -80,7 +80,9 @@ exports.signIn = async ctx => {
       ctx.status = 200;
       ctx.body = {
         username: company.username,
-        json_token: jwt.sign(payload, "$secretword")
+        json_token: jwt.sign(payload, "$secretword"),
+        company_name: company.company_name,
+        email: company.email
       }
     } else {
       ctx.status = 401;
