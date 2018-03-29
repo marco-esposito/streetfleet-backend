@@ -103,8 +103,8 @@ exports.signIn = async ctx => {
 
 exports.updateCompany = async ctx => {
   const userData = ctx.request.body;
-  const incompleteBody = !userData.company_name  || !userData.email || !userData.old_password;
-  // || !userData.new_password;
+  const incompleteBody = !userData.company_name  || !userData.email || !userData.old_password
+  || !userData.new_password;
 
   if (incompleteBody) {
     ctx.status = 400;
@@ -116,18 +116,11 @@ exports.updateCompany = async ctx => {
     return;
   }
   // ctx.company at this stage is all the company data bc queried earlier in middleware
-  console.log('ctx.company: ', ctx.company);
-  console.log('ctx: ', ctx);
-  console.log('userData.old_password: ', userData.old_password);
-
   const areCompatible = await bcrypt.compare(userData.old_password, ctx.company.password);
-  console.log('areCompatible: ', areCompatible);
   // must hash the password before saving it in database
   const saltRounds = 10;
   const plaintextPsw = userData.new_password;
   const hashPsw = await bcrypt.hash(plaintextPsw, saltRounds);
-  console.log('hashPsw: ', hashPsw);
-
   if (areCompatible) {
     const updatedVehicle = {
 			company_name: userData.company_name,
@@ -138,7 +131,6 @@ exports.updateCompany = async ctx => {
 		try {
 			await ctx.company.save();
 			ctx.status = 200;
-      console.log('ctx: ', ctx.body);
       ctx.body = {
         username: ctx.company.username,
         company_name: ctx.company.company_name,
