@@ -103,9 +103,7 @@ exports.signIn = async ctx => {
 
 exports.updateCompany = async ctx => {
   const userData = ctx.request.body;
-  const incompleteBody = !userData.company_name  || !userData.email || !userData.old_password
-  || !userData.new_password;
-
+  const incompleteBody = !userData.company_name  || !userData.email || !userData.old_password || !userData.new_password;
   if (incompleteBody) {
     ctx.status = 400;
     ctx.body = {
