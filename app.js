@@ -57,7 +57,6 @@ app.use(async (ctx, next) => {
       return await next();
   }
   ctx.company = await Company.findOne({username: decoded.username});
-  // console.log('ctx.company: ', ctx.company);
   await next(ctx);
 });
 
