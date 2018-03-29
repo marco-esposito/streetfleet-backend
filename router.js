@@ -34,6 +34,8 @@ router
   .get('/company/:username', authorize, company.getCompany)
   .delete('/company/:username', authorize, company.deleteCompany)
 
+  .put('/company/:username', authorize, company.updateCompany)
+
 
   .get('/*', ctx => {
     ctx.body = {
