@@ -172,14 +172,14 @@ exports.getCompany = ctx => {
 
 exports.deleteCompany = async ctx => {
   try {
-    const removedCompany = await Company.findeOneAndRemove({username: ctx.company.username});
+    const removedCompany = await Company.findOneAndRemove({username: ctx.company.username});
     ctx.status = 204;
   } catch (e) {
     console.error(e);
     ctx.status = 500;
     ctx.body = {
       errors: [
-        'Something was wrong when tryinf to remove the account.'
+        'Something was wrong when trying to remove the account.'
       ]
     }
   }

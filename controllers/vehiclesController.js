@@ -54,7 +54,7 @@ const updateVehicle = async ctx => {
 		}
 	}	else {
     ctx.status = 404;
-		consgt error_message = 'Vehicle not found';
+		const error_message = 'Vehicle not found';
 		console.log(error_message);
 		ctx.body = {
 			errors: [
