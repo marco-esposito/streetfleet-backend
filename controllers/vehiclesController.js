@@ -10,9 +10,11 @@ const updateVehicle = async ctx => {
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
 		ctx.status = 400;
+		const error_message = 'Incomplete body';
+		console.log(error_message);
 		ctx.body = {
 			errors: [
-				'Incomplete body'
+				error_message
 			]
 		};
 		return;
@@ -52,9 +54,11 @@ const updateVehicle = async ctx => {
 		}
 	}	else {
     ctx.status = 404;
+		const error_message = 'Vehicle not found';
+		console.log(error_message);
 		ctx.body = {
 			errors: [
-				'Vehicle not found'
+				error_message
 			]
 		};
 	}
@@ -65,9 +69,11 @@ const addVehicle = async ctx => {
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
 		ctx.status = 400;
+		const error_message = 'Incomplete body';
+		console.log(error_message);
 		ctx.body = {
 			errors: [
-				'Incomplete body'
+				error_message
 			]
 		};
 		return;
@@ -106,9 +112,11 @@ const getVehicle = ctx => {
     ctx.body = vehicles[0];
   } else {
     ctx.status = 404;
+		const error_message = 'Vehicle not found';
+		console.log(error_message);
     ctx.body = {
 			errors: [
-				'Vehicle not found'
+				error_message
 			]
 		};
   };
@@ -130,9 +138,11 @@ const deleteVehicle = async ctx => {
 		ctx.status = 204;
   } else {
     ctx.status = 404;
+		const error_message = 'Vehicle not found';
+		console.log(error_message);
     ctx.body = {
 			errors: [
-				'Vehicle not found'
+				error_message
 			]
 		};
   };
@@ -148,9 +158,11 @@ const postLocation = async ctx => {
 	const incompleteBody = !(userData.mac_address && userData.time && userData.latitude && userData.longitude);
 	if (incompleteBody) {
 		ctx.status = 400;
+		const error_message = 'Incomplete body';
+		console.log(error_message);
 		ctx.body = {
 			errors: [
-				'Incomplete body'
+				error_message
 			]
 		};
 		return;
