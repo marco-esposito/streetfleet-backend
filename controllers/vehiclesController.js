@@ -24,27 +24,11 @@ const updateVehicle = async ctx => {
 		return (vehicle._id.toString() === ctx.params.vehicle_id)
 	});
 	if (matchingVehicles.length > 0) {
-
-    //METHOD WITH findOneAndUpdate:
-		// Company.findOneAndUpdate({'company_name': ctx.company.company_name, 'fleet._id': matchingVehicles[0]._id }, {
-		// 'fleet.$.mac_address': userData.mac_address, 'fleet.$.model': userData.model,
-		// 'fleet.$.license_number': userData.license_number, 'fleet.$.vType': userData.vType, 'fleet.$.make': userData.make, 'fleet.$.year': userData.year }, (err, vehicleDocument) => {
-		// 	if (err) throw Error;
-		// });
-
-		//METHOD WITH MODEL.SAVE():
-		const updatedVehicle = {
-			mac_address: userData.mac_address,
-			model: userData.model,
-			license_number: userData.license_number,
-			vType: userData.vType,
-			make: userData.make,
-			year: userData.year
-		}
-		for (let key in updatedVehicle) matchingVehicles[0][key] = updatedVehicle[key];
+		for (let key in userData) matchingVehicles[0][key] = userData[key];
 		try {
 			await ctx.company.save();
-			ctx.status = 204;
+			ctx.status = 200;
+			ctx.body = matchingVehicles[0];
 		} catch (e) {
 			console.error(e);
 			ctx.status = 500;
