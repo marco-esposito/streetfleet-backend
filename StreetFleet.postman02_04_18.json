@@ -1,0 +1,425 @@
+{
+	"info": {
+		"name": "StreetFleet",
+		"_postman_id": "2b33fe09-61ca-1d8e-0250-3d2607eef31b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get fleet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvbmtpdCIsInBhc3N3b3JkIjoiJDJhJDEwJEI4OUZxYUp5TC5MRzdaQ1FZQVhReS5PT1oyemJWdFNIREFJaDF6WUQvRlpQNGRmZHRjUEMyIiwiaWF0IjoxNTIxOTM0NTIwfQ.LlyaW2EfgSA3Dn86IxBABTTfTLw2CjAFYHO6yBw60Ok",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"license_number\" : \"xcd-123\",\n  \"model\" : \"dodge viper\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/fleet",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"fleet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a vehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvbmtpdCIsInBhc3N3b3JkIjoiJDJhJDEwJEI4OUZxYUp5TC5MRzdaQ1FZQVhReS5PT1oyemJWdFNIREFJaDF6WUQvRlpQNGRmZHRjUEMyIiwiaWF0IjoxNTIxOTM0NTIwfQ.LlyaW2EfgSA3Dn86IxBABTTfTLw2CjAFYHO6yBw60Ok",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"model\": \"eee\",\n        \"license_number\": \"eee\",\n        \"vType\": \"eee\",\n        \"make\": \"eee\",\n        \"year\": 1990,\n        \"mac_address\": \"ee-FF-22-01-23-45\"\n    }"
+				},
+				"url": {
+					"raw": "{{url}}/vehicle",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vehicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a vehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvbmtpdCIsInBhc3N3b3JkIjoiJDJhJDEwJEI4OUZxYUp5TC5MRzdaQ1FZQVhReS5PT1oyemJWdFNIREFJaDF6WUQvRlpQNGRmZHRjUEMyIiwiaWF0IjoxNTIxOTM0NTIwfQ.LlyaW2EfgSA3Dn86IxBABTTfTLw2CjAFYHO6yBw60Ok",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"model\": \"ttt\",\n    \"license_number\": \"ttt\",\n    \"vType\": \"ttt\",\n    \"make\": \"ttt\",\n    \"year\": 1980,\n    \"mac_address\": \"tt-14-22-01-23-45\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/vehicle/5ab6e535ffef8372a37f6888",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vehicle",
+						"5ab6e535ffef8372a37f6888"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get one vehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvbmtpdCIsInBhc3N3b3JkIjoiJDJhJDEwJEI4OUZxYUp5TC5MRzdaQ1FZQVhReS5PT1oyemJWdFNIREFJaDF6WUQvRlpQNGRmZHRjUEMyIiwiaWF0IjoxNTIxOTM0NTIwfQ.LlyaW2EfgSA3Dn86IxBABTTfTLw2CjAFYHO6yBw60Ok",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"license_number\" : \"xcd-123\",\n  \"model\" : \"dodge viper\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/vehicle/5ab6f38b9b878b001421aced",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vehicle",
+						"5ab6f38b9b878b001421aced"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete one vehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvbmtpdCIsInBhc3N3b3JkIjoiJDJhJDEwJEI4OUZxYUp5TC5MRzdaQ1FZQVhReS5PT1oyemJWdFNIREFJaDF6WUQvRlpQNGRmZHRjUEMyIiwiaWF0IjoxNTIxOTM0NTIwfQ.LlyaW2EfgSA3Dn86IxBABTTfTLw2CjAFYHO6yBw60Ok",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/vehicle/5ab6e8dd158ce87361e5b088",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vehicle",
+						"5ab6e8dd158ce87361e5b088"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get trip logs for one vehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvbmtpdCIsInBhc3N3b3JkIjoiJDJhJDEwJEI4OUZxYUp5TC5MRzdaQ1FZQVhReS5PT1oyemJWdFNIREFJaDF6WUQvRlpQNGRmZHRjUEMyIiwiaWF0IjoxNTIxOTM0NTIwfQ.LlyaW2EfgSA3Dn86IxBABTTfTLw2CjAFYHO6yBw60Ok",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "license-number",
+						"value": "673v467v",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"license_number\" : \"xcd-123\",\n  \"model\" : \"dodge viper\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/trips/55-55-55-55-55-55",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"trips",
+						"55-55-55-55-55-55"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send location from mobile (MQ)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"disabled": true
+					},
+					{
+						"key": "Postman-Token",
+						"value": "745bcee3-8c08-ae5c-8b25-d4e4d8bd03f6",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"mac_address\" : \"BB-BB\",\n  \"time\": 1521216900000,\n  \"latitude\": 45.2656452,\n  \"longitude\": 2.35653\n}"
+				},
+				"url": {
+					"raw": "{{url}}/vehicle/location",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vehicle",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Company sign up",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"company_name\": \"ABC\",\n    \"username\": \"rumplstiltkin\",\n    \"email\": \"rumplestilskin2018@gmail.com\",\n    \"password\": \"49fosf0ois0\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/company/sign-up",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"company",
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Company sign in",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "49fosf0ois0",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "rumplstiltkin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/company/sign-in",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"company",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Company",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "49fosf0ois0",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "rumplstiltkin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/company/sign-in",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"company",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test route",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJ1bXBsc3RpbHRraW42IiwicGFzc3dvcmQiOiIkMmEkMTAkSGY0Nnl3ejhtMC4zMnFzSHYxcHN6ZU1xVkxYcHJMSThHYU5qQWsvbW9PNmdxdzJDUFdxcGEiLCJpYXQiOjE1MjE1Njk3NzF9.4AYGFi51GoELbwaVy9gFOmyEixyzSaUPswa6OmH4SQk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/testauthorize",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"testauthorize"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
