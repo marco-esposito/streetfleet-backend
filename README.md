@@ -22,7 +22,7 @@ This repo is the backend for Street Fleet vehicle tracking app.
 - [Redis](https://redis.io/)
 - [Socket.io](https://socket.io/)
 
-![App architecture](https://github.com/nikwib/streetfleet-backend/blob/develop/architecture.jpg)
+![App architecture](https://github.com/nikwib/streetfleet-backend/blob/develop/Architecture.jpg)
 
 ## Contributors
 
