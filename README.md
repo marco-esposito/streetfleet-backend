@@ -4,8 +4,6 @@
 
 This repo is the backend for Street Fleet vehicle tracking app.
 
-
-
 ## Usage
 
 1. Clone and run `npm install`.
@@ -16,14 +14,15 @@ This repo is the backend for Street Fleet vehicle tracking app.
 6. Feel free to use [apiary documentation](https://streetfleet.docs.apiary.io)
 7. Follow the instruction for the [webclient](https://github.com/nikwib/streetfleet-webclient) and [mobile](https://github.com/nikwib/streetfleet-mobile)
 
-
-
 ## Tech Stack
 
-- Koa
-- MongoDB/Mongoose
+- [Node.js](https://nodejs.org/)
+- [Koa](http://koajs.com/)
+- [MongoDB](https://www.mongodb.com/)/[Mongoose](http://mongoosejs.com/)
+- [Redis](https://redis.io/)
+- [Socket.io](https://socket.io/)
 
-
+![App architecture](https://github.com/nikwib/streetfleet-backend/blob/develop/architecture.jpg)
 
 ## Contributors
 
@@ -36,4 +35,3 @@ Fork, then clone the repository. Push to your fork and submit a pull request.
 ## License
 
 This project is licensed under the MIT License
-
