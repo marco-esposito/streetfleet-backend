@@ -20,11 +20,13 @@ require('./db');
 /**
  * Middleware
  */
+app.use(async (ctx,next) => {console.log('first'); await next(); console.log('last');})
 app.use(cors());
 app.use(logger());
 app.use(bodyParser());
 
 //handling errors ultimately
+// TODO: Clarify usecase 
 app.use(async (ctx, next) => {
   try {
     await next();
@@ -48,16 +50,15 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   let token = ctx.headers['authorization'];
   if (!token || token.split(' ')[0] === 'Basic') return await next();
-
-  token = token.split(' ').pop();
+  token = token.split(' ').pop(); // for JWT token
   let decoded;
   try {
-    decoded = jwt.verify(token, "$secretword");
+    decoded = jwt.verify(token, '$secretword');    
   } catch (e) {
       return await next();
   }
   ctx.company = await Company.findOne({username: decoded.username});
-  await next();
+  await next();  
 });
 
 /**
@@ -66,9 +67,8 @@ app.use(async (ctx, next) => {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-
 app.listen(config.port).on('error', err => {
   console.error(err);
 });
 
-console.log(`Server now listening on: ${config.port}`)
+console.log(`Server now listening on: ${config.port}`);
