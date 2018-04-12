@@ -1,10 +1,9 @@
 'use strict';
-
 var atob = require('atob');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
 const Company = require('../models/company');
+const { HTTPError } = require('./../HTTPError');
 
 exports.signUp = async ctx => {
   const userData = ctx.request.body;
@@ -22,14 +21,14 @@ exports.signUp = async ctx => {
       ]
     };
   } else if (incompleteBody) {
-    ctx.status = 400;
-    const error_message = 'Incomplete body';
-    console.log(error_message);
-    ctx.body = {
-      errors: [
-        error_message
-      ]
-    };
+    // ctx.status = 400;
+    throw new HTTPError(400, 'Incomplete body');
+    // console.log(error_message);
+    // ctx.body = {
+    //   errors: [
+    //     error_message
+    //   ]
+    // };
   } else {
     const saltRounds = 10;
     const plaintextPsw = userData.password;
@@ -91,24 +90,28 @@ exports.signIn = async ctx => {
         email: company.email
       };
     } else {
-      ctx.status = 401;
-      const error_message = 'Unauthorized';
-      console.log(error_message);
-      ctx.body = {
-        errors: [
-          error_message
-        ]
-      };
+
+      throw new HTTPError(401, 'Unauthorized obviously');
+      //   ctx.status = 401;
+      //   const error_message = 'Unauthorized';
+      //   console.log(error_message);
+      //   ctx.body = {
+      //     errors: [
+      //       error_message
+      //     ]
+      //   };
     }
   } else {
-    ctx.status = 404;
-    const error_message = 'Username not found';
-    console.log(error_message);
-    ctx.body = {
-      errors: [
-        error_message
-      ]
-    };
+    throw new HTTPError(404, 'Username not found 2');
+
+    // ctx.status = 404;
+    // const error_message = 'Username not found';
+    // console.log(error_message);
+    // ctx.body = {
+    //   errors: [
+    //     error_message
+    //   ]
+    // };
   }
 };
 
