@@ -3,7 +3,8 @@ var atob = require('atob');
 var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Company = require('../models/company');
-const { HTTPError } = require('./../HTTPError');
+const HTTPError = require('./../HTTPError');
+const CustomHTTPError = require('./../HTTPError');
 
 exports.signUp = async ctx => {
   const userData = ctx.request.body;
@@ -12,17 +13,19 @@ exports.signUp = async ctx => {
   const incompleteBody = !userData.company_name || !userData.username || !userData.email || !userData.password;
 
   if (user) {
-    ctx.status = 400;
-    const error_message = 'Username already exist!';
-    console.log(error_message);
-    ctx.body = {
-      errors: [
-        error_message
-      ]
-    };
-  } else if (incompleteBody) {
+    throw new CustomHTTPError(400, 'This username already exists yo!');
+
     // ctx.status = 400;
-    throw new HTTPError(400, 'Incomplete body');
+    // const error_message = 'Username already exist!';
+    // console.log(error_message);
+    // ctx.body = {
+    //   errors: [
+    //     error_message
+    //   ]
+    // };
+  } else if (incompleteBody) {
+    throw new CustomHTTPError(400, 'Incomplete body');
+    // ctx.status = 400;
     // console.log(error_message);
     // ctx.body = {
     //   errors: [
@@ -62,14 +65,15 @@ exports.signUp = async ctx => {
 
 exports.signIn = async ctx => {
   if (!ctx.headers['authorization']) {
-    ctx.status = 400;
-    const error_message = 'Basic authorization in header is missing';
-    console.log(error_message);
-    ctx.body = {
-      errors: [
-        error_message
-      ]
-    };
+      throw new CustomHTTPError(400, 'Basic authorization in header is missing');
+    // ctx.status = 400;
+    // const error_message = 'Basic authorization in header is missing';
+    // console.log(error_message);
+    // ctx.body = {
+    //   errors: [
+    //     error_message
+    //   ]
+    // };
     return;
   }
   const b64 = atob(ctx.headers['authorization'].split(' ').pop());
@@ -102,7 +106,7 @@ exports.signIn = async ctx => {
       //   };
     }
   } else {
-    throw new HTTPError(404, 'Username not found 2');
+    throw new CustomHTTPError(404, 'Username not found 2');
 
     // ctx.status = 404;
     // const error_message = 'Username not found';
