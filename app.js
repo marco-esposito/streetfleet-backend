@@ -12,7 +12,6 @@ const cors = require('kcors');
 const config = require('./config');
 const router = require('./router');
 
-
 const errorHandler = require('./errorMiddleware');
 const authHandler = require('./authMiddleware');
 // requiring the db like this is executing the code right here.
@@ -25,8 +24,7 @@ app.use(cors());
 app.use(logger());
 app.use(bodyParser());
 
-//handling errors ultimately
-// TODO: Clarify usecase 
+//Its catching any errors that happen downstream, awaits them, then logs what it catches
 app.use(errorHandler);
 
 //middleware for authentication

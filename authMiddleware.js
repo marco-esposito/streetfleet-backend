@@ -9,10 +9,10 @@ module.exports = async (ctx, next) => {
   token = token.split(' ').pop(); // for JWT token
   let decoded;
   try {
-    decoded = jwt.verify(token, '$secretword');    
+    decoded = jwt.verify(token, 'process.env.secret');
   } catch (e) {
-      return await next();
+    return await next();
   }
   ctx.company = await Company.findOne({username: decoded.username});
-  await next();  
+  await next();
 };

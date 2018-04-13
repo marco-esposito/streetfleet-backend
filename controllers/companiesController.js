@@ -4,7 +4,6 @@ var bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Company = require('../models/company');
 const HTTPError = require('./../HTTPError');
-const CustomHTTPError = require('./../HTTPError');
 
 exports.signUp = async ctx => {
   const userData = ctx.request.body;
@@ -13,25 +12,9 @@ exports.signUp = async ctx => {
   const incompleteBody = !userData.company_name || !userData.username || !userData.email || !userData.password;
 
   if (user) {
-    throw new CustomHTTPError(400, 'This username already exists yo!');
-
-    // ctx.status = 400;
-    // const error_message = 'Username already exist!';
-    // console.log(error_message);
-    // ctx.body = {
-    //   errors: [
-    //     error_message
-    //   ]
-    // };
+    throw new HTTPError(400, 'This username already exists!');
   } else if (incompleteBody) {
-    throw new CustomHTTPError(400, 'Incomplete body');
-    // ctx.status = 400;
-    // console.log(error_message);
-    // ctx.body = {
-    //   errors: [
-    //     error_message
-    //   ]
-    // };
+    throw new HTTPError(400, 'Incomplete body');
   } else {
     const saltRounds = 10;
     const plaintextPsw = userData.password;
@@ -45,6 +28,7 @@ exports.signUp = async ctx => {
       fleet: []
     };
 
+    // Can we take the try/catch out?
     try {
       const response = await Company.create(company);
       ctx.body = {
@@ -54,26 +38,14 @@ exports.signUp = async ctx => {
       };
       ctx.status = 201;
     } catch (e) {
-      console.error(e);
-      ctx.status = 500;
-      ctx.body = {
-        message: e.message
-      };
+      throw new HTTPError(500, e.message);
     }
   }
 };
 
 exports.signIn = async ctx => {
   if (!ctx.headers['authorization']) {
-      throw new CustomHTTPError(400, 'Basic authorization in header is missing');
-    // ctx.status = 400;
-    // const error_message = 'Basic authorization in header is missing';
-    // console.log(error_message);
-    // ctx.body = {
-    //   errors: [
-    //     error_message
-    //   ]
-    // };
+      throw new HTTPError(400, 'Basic authorization in header is missing.');
     return;
   }
   const b64 = atob(ctx.headers['authorization'].split(' ').pop());
@@ -94,28 +66,10 @@ exports.signIn = async ctx => {
         email: company.email
       };
     } else {
-
-      throw new HTTPError(401, 'Unauthorized obviously');
-      //   ctx.status = 401;
-      //   const error_message = 'Unauthorized';
-      //   console.log(error_message);
-      //   ctx.body = {
-      //     errors: [
-      //       error_message
-      //     ]
-      //   };
+      throw new HTTPError(401, 'Unauthorized obviously.');
     }
   } else {
-    throw new CustomHTTPError(404, 'Username not found 2');
-
-    // ctx.status = 404;
-    // const error_message = 'Username not found';
-    // console.log(error_message);
-    // ctx.body = {
-    //   errors: [
-    //     error_message
-    //   ]
-    // };
+    throw new HTTPError(404, 'Username not found.');
   }
 };
 
@@ -123,14 +77,7 @@ exports.updateCompany = async ctx => {
   const userData = ctx.request.body;
   const incompleteBody = !userData.company_name || !userData.email || !userData.old_password || !userData.new_password;
   if (incompleteBody) {
-    ctx.status = 400;
-    const error_message = 'Bad Request - the request could not be understood or was missing required parameters.(incomplete body)';
-    console.log(error_message);
-    ctx.body = {
-      errors: [
-        error_message
-      ]
-    };
+    throw new HTTPError(400, 'Bad Request - the request could not be understood or was missing required parameters.(incomplete body)');
     return;
   }
   // ctx.company at this stage is all the company data bc queried earlier in middleware
@@ -155,20 +102,10 @@ exports.updateCompany = async ctx => {
         email: ctx.company.email
       };
     } catch (e) {
-      console.error(e);
-      ctx.status = 500;
-      ctx.body = {
-        message: e.message
-      };
+      throw new HTTPError(500, e.message);
     }
   } else {
-    ctx.status = 401;
-    const error_message = 'The wrong old password was entered';
-    ctx.body = {
-      errors: [
-        error_message
-      ]
-    };
+    throw new HTTPError(401, 'The wrong old password was entered');
   }
 };
 
