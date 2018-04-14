@@ -31,16 +31,16 @@ router
 
   .post('/company/sign-up', company.signUp)
   .get('/company/sign-in', company.signIn)
-  .get('/company/:username', authorize, company.getCompany)
-  .delete('/company/:username', authorize, company.deleteCompany)
+  .get('/company/', authorize, company.getCompany)
+  .delete('/company/', authorize, company.deleteCompany)
 
-  .put('/company/:username', authorize, company.updateCompany)
+  .put('/company/', authorize, company.updateCompany)
 
 
   .get('/*', ctx => {
     ctx.body = {
       errors:[
-        `The route doesn't exist`
+        'The route does not exist'
       ]
     };
     ctx.status = 404;
