@@ -9,7 +9,8 @@ module.exports = async (ctx, next) => {
   token = token.split(' ').pop(); // for JWT token
   let decoded;
   try {
-    decoded = jwt.verify(token, 'process.env.secret');
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
+
   } catch (e) {
     return await next();
   }

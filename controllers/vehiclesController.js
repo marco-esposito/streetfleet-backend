@@ -69,7 +69,7 @@ const addVehicle = async ctx => {
 	const incompleteBody = !(userData.model && userData.license_number && userData.mac_address && userData.vType && userData.year && userData.make);
 	if (incompleteBody) {
 		ctx.status = 400;
-		const error_message = 'Incomplete body';
+		const error_message = 'Incomplete car body';
 		console.log(error_message);
 		ctx.body = {
 			errors: [
